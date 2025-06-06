@@ -219,6 +219,36 @@
             }
         }
     </style>
+<script>
+// Set the date we're counting down to
+var countDownDate = new Date("Aug 1, 2025 00:00:00").getTime();
+
+// Update the count down every 1 second
+var x = setInterval(function() {
+
+  // Get today's date and time
+  var now = new Date().getTime();
+
+  // Find the distance between now and the count down date
+  var distance = countDownDate - now;
+
+  // Time calculations for days, hours, minutes and seconds
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  // Display the result in the element with id="demo"
+  document.getElementById("demo").innerHTML = days + " : " + hours + " : "
+  + minutes + " : " + seconds + " ";
+
+  // If the count down is finished, write some text
+  if (distance < 0) {
+    clearInterval(x);
+    document.getElementById("demo").innerHTML = "IBE";
+  }
+}, 1000);
+</script>
 <meta name="google-site-verification" content="hpj5U_WvXSyWShOx1oq0DLXSq-18DPRH6pzmkGbiE8A" />
 <meta name="msvalidate.01" content="E11297DBF0A9240A56BC62DDB1C93395" />
 </head>
@@ -290,6 +320,11 @@
                 <div class="feature-item">
                     <h3>Content Creation</h3>
                     <p>Engaging and relevant content that speaks to your target audience and drives action.</p>
+                </div>
+                    <h3>IBE Launching Soon!</h3>
+                    <p>one of our biggest projects coming live in <br>
+                    <!-- Display the countdown timer in an element -->
+<p style="color:#009900;font-size:2.5em" id="demo"></p></p>
                 </div>
 <div class="feature-item">
                     <h3>Affiliate Marketing</h3>
