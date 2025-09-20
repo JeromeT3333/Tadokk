@@ -32,7 +32,7 @@
         <!-- Header -->
         <header class="text-center py-6 md:py-8 bg-blue-600 text-white rounded-t-lg shadow-lg">
             <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight">Live Scores</h1>
-            <p class="text-sm md:text-lg mt-2 font-medium opacity-90">Powered by Google Sheets</p>
+            <p class="text-sm md:text-lg mt-2 font-medium opacity-90">Powered by Tadokk</p>
         </header>
 
         <!-- Loading Indicator -->
@@ -155,7 +155,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             if (SCORES_URL === 'YOUR_GOOGLE_SHEETS_URL_HERE') {
                 errorMessage.style.display = 'block';
-                errorMessage.querySelector('p').textContent = 'Please update the SCORES_URL in the code with your own Google Sheets link.';
+                errorMessage.querySelector('p').textContent = 'Error updating Scores.';
             } else {
                 fetchScores();
                 setInterval(fetchScores, REFRESH_INTERVAL_MS);
