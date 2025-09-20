@@ -1,167 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Scores</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-            color: #1f2937;
-        }
-
-        .score-card {
-            background-color: #ffffff;
-            border: 1px solid #e5e7eb;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .score-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Scores</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f4f6;
+      color: #1f2937;
+    }
+    .score-card {
+      background-color: #ffffff;
+      border: 1px solid #e5e7eb;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .score-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                  0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+  </style>
 </head>
 <body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
 
-    <!-- Main Container -->
-    <div class="w-full max-w-4xl mx-auto">
-        <!-- Header -->
-        <header class="text-center py-6 md:py-8 bg-blue-600 text-white rounded-t-lg shadow-lg">
-            <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight">Live Scores</h1>
-            <p class="text-sm md:text-lg mt-2 font-medium opacity-90">Powered by Tadokk</p>
-        </header>
+  <!-- Main Container -->
+  <div class="w-full max-w-4xl mx-auto">
+    <!-- Header -->
+    <header class="text-center py-6 md:py-8 bg-blue-600 text-white rounded-t-lg shadow-lg">
+      <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight">Live Scores</h1>
+      <p class="text-sm md:text-lg mt-2 font-medium opacity-90">Powered by Tadokk</p>
+    </header>
 
-        <!-- Loading Indicator -->
-        <div id="loading" class="text-center py-10" style="display: none;">
-            <svg class="animate-spin h-10 w-10 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <p class="mt-4 text-gray-600">Fetching scores...</p>
-        </div>
-
-        <!-- Scores Container -->
-        <main id="scores-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 md:p-8 bg-white rounded-b-lg shadow-lg"></main>
-
-        <!-- Last Updated Timestamp -->
-        <footer class="text-center text-gray-500 text-xs mt-4">
-            Last updated: <span id="last-updated">--</span>
-        </footer>
-
-        <!-- Error Message -->
-        <div id="error-message" class="text-center mt-4 text-red-600 font-medium" style="display: none;">
-            <p>Failed to load scores. Please check your Google Sheets URL or try again later.</p>
-        </div>
+    <!-- Loading Indicator -->
+    <div id="loading" class="text-center py-10" style="display: none;">
+      <svg class="animate-spin h-10 w-10 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+      </svg>
+      <p class="mt-4 text-gray-600">Fetching scores...</p>
     </div>
 
-    <script>
-        const SCORES_URL = 'YOUR_GOOGLE_SHEETS_URL_HERE'; // <-- REPLACE THIS WITH YOUR OWN URL
-        const REFRESH_INTERVAL_MS = 30000; // 30 seconds
-        
-        const scoresContainer = document.getElementById('scores-container');
-        const loadingIndicator = document.getElementById('loading');
-        const lastUpdated = document.getElementById('last-updated');
-        const errorMessage = document.getElementById('error-message');
+    <!-- Scores Container -->
+    <main id="scores-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 md:p-8 bg-white rounded-b-lg shadow-lg"></main>
 
-        // Function to parse CSV content
-        function parseCSV(text) {
-            const lines = text.trim().split('\n');
-            if (lines.length < 2) return [];
+    <!-- Last Updated Timestamp -->
+    <footer class="text-center text-gray-500 text-xs mt-4">
+      Last updated: <span id="last-updated">--</span>
+    </footer>
 
-            const headers = lines[0].split(',').map(header => header.trim());
-            const data = lines.slice(1).map(line => {
-                const values = line.split(',').map(val => val.trim());
-                let row = {};
-                headers.forEach((header, i) => {
-                    row[header] = values[i];
-                });
-                return row;
-            });
-            return data;
-        }
+    <!-- Error Message -->
+    <div id="error-message" class="text-center mt-4 text-red-600 font-medium" style="display: none;">
+      <p>Failed to load scores. Please do Hold as our team is working on it!</p>
+    </div>
+  </div>
 
-        // Function to render score cards from data
-        function renderScores(data) {
-            scoresContainer.innerHTML = ''; // Clear previous scores
-            if (data.length === 0) {
-                scoresContainer.innerHTML = '<p class="text-center text-gray-500 w-full col-span-full">No scores available.</p>';
-                return;
-            }
+  <script>
+    const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSSLEeAAtj-UvuFem6g0n-oKn7Y1Kr5O1e3OvYUwOjwOdF5Xh70Qz5N1xvrxuSYNk6GnJdd5W1xK6Dx/pub?output=csv";
+    const SCORES_URL = "https://api.allorigins.win/raw?url=" + encodeURIComponent(SHEET_URL);
+    const REFRESH_INTERVAL_MS = 30000; // 30s
 
-            data.forEach(score => {
-                const card = document.createElement('div');
-                card.className = 'score-card p-4 md:p-6 rounded-xl shadow-md';
-                
-                // Construct the HTML for a single score card
-                card.innerHTML = `
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center space-x-3">
-                            <span class="text-sm md:text-base font-bold text-gray-800">${score.MBBS}</span>
-                        </div>
-                        <span class="text-xl md:text-2xl font-extrabold text-blue-600">${score.ScoreA}</span>
-                    </div>
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center space-x-3">
-                            <span class="text-sm md:text-base font-bold text-gray-800">${score.ANATOMY}</span>
-                        </div>
-                        <span class="text-xl md:text-2xl font-extrabold text-blue-600">${score.ScoreB}</span>
-                    </div>
-                    <p class="text-center text-xs md:text-sm text-gray-500 font-medium">${score.Status}</p>
-                `;
-                scoresContainer.appendChild(card);
-            });
-        }
+    const scoresContainer = document.getElementById("scores-container");
+    const loadingIndicator = document.getElementById("loading");
+    const lastUpdated = document.getElementById("last-updated");
+    const errorMessage = document.getElementById("error-message");
 
-        // Main function to fetch and update scores
-        async function fetchScores() {
-            loadingIndicator.style.display = 'block';
-            scoresContainer.style.display = 'none';
-            errorMessage.style.display = 'none';
+    function parseCSV(text) {
+      const lines = text.trim().split("\n");
+      if (lines.length < 2) return [];
+      const headers = lines[0].split(",").map(h => h.trim());
+      return lines.slice(1).map(line => {
+        const values = line.split(",").map(v => v.trim());
+        let row = {};
+        headers.forEach((h, i) => row[h] = values[i]);
+        return row;
+      });
+    }
 
-            try {
-                // To make your Google Sheet URL work, you must do the following:
-                // 1. Open your Google Sheet
-                // 2. Go to File -> Share -> Publish to web
-                // 3. Under 'Link', select the sheet you want to use.
-                // 4. For 'Format', choose 'Comma-separated values (.csv)'.
-                // 5. Click 'Publish' and copy the generated URL.
-                // 6. Replace the placeholder URL above with this new URL.
-                // NOTE: The headers in your sheet must be exactly: "TeamA", "ScoreA", "TeamB", "ScoreB", "Status".
-                
-                const response = await fetch(SCORES_URL);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const text = await response.text();
-                const scoresData = parseCSV(text);
+    function renderScores(data) {
+      scoresContainer.innerHTML = "";
+      if (data.length === 0) {
+        scoresContainer.innerHTML = '<p class="text-center text-gray-500 w-full col-span-full">No scores available.</p>';
+        return;
+      }
+      data.forEach(score => {
+        const card = document.createElement("div");
+        card.className = "score-card p-4 md:p-6 rounded-xl shadow-md";
+        card.innerHTML = `
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-sm md:text-base font-bold text-gray-800">${score.TeamA}</span>
+            <span class="text-xl md:text-2xl font-extrabold text-blue-600">${score.ScoreA}</span>
+          </div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-sm md:text-base font-bold text-gray-800">${score.TeamB}</span>
+            <span class="text-xl md:text-2xl font-extrabold text-blue-600">${score.ScoreB}</span>
+          </div>
+          <p class="text-center text-xs md:text-sm text-gray-500 font-medium">${score.Status}</p>
+        `;
+        scoresContainer.appendChild(card);
+      });
+    }
 
-                renderScores(scoresData);
-                lastUpdated.textContent = new Date().toLocaleTimeString();
-                
-            } catch (error) {
-                console.error('Error fetching scores:', error);
-                errorMessage.style.display = 'block';
-            } finally {
-                loadingIndicator.style.display = 'none';
-                scoresContainer.style.display = 'grid';
-            }
-        }
+    async function fetchScores() {
+      loadingIndicator.style.display = "block";
+      scoresContainer.style.display = "none";
+      errorMessage.style.display = "none";
 
-        // Initial fetch and set up recurring refresh
-        document.addEventListener('DOMContentLoaded', () => {
-            if (SCORES_URL === 'YOUR_GOOGLE_SHEETS_URL_HERE') {
-                errorMessage.style.display = 'block';
-                errorMessage.querySelector('p').textContent = 'Error updating Scores.';
-            } else {
-                fetchScores();
-                setInterval(fetchScores, REFRESH_INTERVAL_MS);
-            }
-        });
-    </script>
+      try {
+        const response = await fetch(SCORES_URL);
+        if (!response.ok) throw new Error("Network error");
+        const text = await response.text();
+        const scoresData = parseCSV(text);
+        renderScores(scoresData);
+        lastUpdated.textContent = new Date().toLocaleTimeString();
+      } catch (err) {
+        console.error("Error fetching scores:", err);
+        errorMessage.style.display = "block";
+      } finally {
+        loadingIndicator.style.display = "none";
+        scoresContainer.style.display = "grid";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchScores();
+      setInterval(fetchScores, REFRESH_INTERVAL_MS);
+    });
+  </script>
 </body>
 </html>
-
