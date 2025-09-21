@@ -1,95 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Live Scores</title>
-  <link rel="icon" href="Tadokkico.ico" type="image/x-icon">
+  <link rel="icon" href="Tadokkico1.png" type="image/x-icon">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     body { font-family: 'Inter', sans-serif; }
-    .score-card {
-      background-color: #ffffff;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .score-card:hover {
-      transform: translateY(-5px) scale(1.02);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    }
-    .overlay { background: rgba(0, 0, 0, 0.5); }
-    .sidebar { transform: translateX(100%); transition: transform 0.3s ease; }
-    .sidebar.active { transform: translateX(0); }
-    /* Intro Animation */
+
+    /* Splash animation (longer cover, quicker shrink) */
     #intro-screen {
-      animation: splash 2s forwards;
+      animation: splash 3.5s forwards;
+      transform-origin: top left;
     }
     @keyframes splash {
-      0% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.05); opacity: 1; }
-      80% { transform: scale(0.2); opacity: 0.8; transform-origin: top left; }
-      100% { transform: scale(0); opacity: 0; transform-origin: top left; }
+      0%   { transform: scale(1); opacity: 1; border-radius: 0; }
+      70%  { transform: scale(1); opacity: 1; border-radius: 0; } /* Hold */
+      85%  { transform: scale(0.7); opacity: 0.9; border-radius: 50px; }
+      100% { transform: scale(0); opacity: 0; border-radius: 50px; }
     }
-    /* Logo loader animation */
-    .logo-bounce {
-      animation: bounceScale 1.5s infinite ease-in-out;
-    }
+
+    /* Loader logo bounce */
+    .logo-bounce { animation: bounceScale 1.5s infinite ease-in-out; }
     @keyframes bounceScale {
-      0%, 100% { transform: scale(1); }
+      0%,100% { transform: scale(1); }
       50% { transform: scale(1.2); }
     }
+
+    /* Sidebar */
+    .sidebar { transform: translateX(100%); transition: transform 0.3s ease; }
+    .sidebar.active { transform: translateX(0); }
+    .overlay { background: rgba(0,0,0,0.5); }
+
+    /* Dark mode overrides */
+    .dark body { background-color: #111827; color: #f3f4f6; }
+    .dark .bg-white { background-color: #1f2937; }
+    .dark .text-gray-500 { color: #9ca3af; }
+    .dark header { background-color: #1e3a8a; }
+    .dark .sidebar { background-color: rgba(31,41,55,0.9); }
   </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-950 dark:text-gray-100 min-h-screen flex flex-col items-center justify-start">
+<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col items-center justify-start">
 
-  <!-- Splash Screen -->
+  <!-- Splash -->
   <div id="intro-screen" class="fixed inset-0 bg-blue-600 flex items-center justify-center z-50">
-    <img src="Tadokkico.png" alt="Tadokk Logo" class="h-24 w-24 animate-pulse">
+    <img src="Tadokkico1.png" alt="Tadokk Logo" class="h-24 w-24 animate-pulse">
   </div>
 
-  <!-- Top Header -->
-  <header class="w-full flex items-center justify-between py-6 md:py-8 bg-blue-600 text-white shadow-lg relative px-6">
-    <!-- ✅ Logo left corner -->
-    <a href="index.html">
-      <img src="Tadokkico.png" alt="Tadokk Logo" class="h-10 w-10">
-    </a>
+  <!-- Header -->
+  <header class="w-full flex items-center justify-between py-6 bg-blue-600 text-white shadow-lg px-6">
+    <a href="index.html"><img src="Tadokkico1.png" alt="Logo" class="h-10 w-10"></a>
     <div class="text-center">
-      <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight">Live Scores</h1>
-      <p class="text-sm md:text-lg mt-2 font-medium opacity-90">Powered by Tadokk</p>
+      <h1 class="text-3xl md:text-5xl font-extrabold">Live Scores</h1>
+      <p class="text-sm md:text-lg opacity-90">Powered by Tadokk</p>
     </div>
-    <!-- Hamburger -->
-    <button id="open-nav" class="text-white text-3xl">
-      &#9776;
-    </button>
+    <button id="open-nav" class="text-white text-3xl">&#9776;</button>
   </header>
 
-  <!-- Main Content -->
-  <div class="w-full max-w-4xl mx-auto transition ease-in-out duration-500 opacity-0" id="page-content">
-    <!-- Loading -->
+  <!-- Content -->
+  <div class="w-full max-w-4xl mx-auto opacity-0 transition" id="page-content">
     <div id="loading" class="text-center py-10 hidden">
-      <img src="Tadokkico.png" alt="Loading Logo" class="h-16 w-16 mx-auto logo-bounce">
-      <p class="mt-4 text-gray-600 dark:text-gray-300">Fetching scores...</p>
+      <img src="Tadokkico1.png" alt="Loading Logo" class="h-16 w-16 mx-auto logo-bounce">
+      <p class="mt-4 text-gray-600">Fetching scores...</p>
     </div>
 
-    <!-- Scores Section -->
-    <main id="scores-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 md:p-8 bg-white dark:bg-gray-900 rounded-lg shadow-lg"></main>
+    <main id="scores-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 bg-white rounded-lg shadow-lg"></main>
 
-    <!-- Last Updated -->
-    <footer class="text-center text-gray-500 dark:text-gray-400 text-xs mt-4">
+    <footer class="text-center text-gray-500 text-xs mt-4">
       Last updated: <span id="last-updated">--</span>
     </footer>
 
-    <!-- ✅ Up Next Section -->
-    <section id="up-next" class="p-6 md:p-8 bg-white dark:bg-gray-900 mt-6 rounded-lg shadow-lg">
+    <section id="up-next" class="p-6 bg-white mt-6 rounded-lg shadow-lg">
       <h2 class="text-xl font-bold text-blue-600 mb-4">Up Next</h2>
       <div id="upcoming-container" class="space-y-4">
-        <p class="text-gray-500 dark:text-gray-400">No upcoming matches listed.</p>
+        <p class="text-gray-500">No upcoming matches listed.</p>
       </div>
     </section>
 
-    <!-- Error -->
     <div id="error-message" class="text-center mt-4 text-red-600 font-medium hidden">
-      <p>Failed to load scores. Please hold on as our team is working on it!</p>
+      <p>Failed to load scores. Please hold on!</p>
     </div>
   </div>
 
@@ -97,38 +88,33 @@
   <div id="overlay" class="overlay fixed inset-0 hidden z-20"></div>
 
   <!-- Sidebar -->
-  <div id="sidebar" class="sidebar fixed top-0 right-0 h-full w-72 bg-white/70 dark:bg-gray-900/70 backdrop-blur-md shadow-lg z-30 flex flex-col">
-    <!-- Top -->
+  <div id="sidebar" class="sidebar fixed top-0 right-0 h-full w-72 bg-white/80 backdrop-blur-md shadow-lg z-30 flex flex-col">
     <div class="flex items-center justify-between p-4">
-      <!-- Logo -->
-      <a href="index.html">
-        <img src="Tadokkico.png" alt="Tadokk Logo" class="h-10 w-10">
-      </a>
-      <div class="flex items-center space-x-4">
-        <!-- Theme toggle -->
-        <button id="theme-toggle" class="text-gray-600 dark:text-gray-300 hover:text-blue-600">
-          <i data-lucide="moon"></i>
+      <a href="index.html"><img src="Tadokkico.png" alt="Logo" class="h-10 w-10"></a>
+      <div class="flex items-center space-x-3">
+        <button id="theme-toggle" class="text-gray-600 hover:text-gray-900">
+          <i data-lucide="moon" class="w-6 h-6"></i>
         </button>
-        <!-- Close -->
-        <button id="close-nav" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 text-2xl font-bold">&times;</button>
+        <button id="close-nav" class="text-gray-600 hover:text-gray-900 text-2xl font-bold">&times;</button>
       </div>
     </div>
-    <!-- Nav links -->
     <nav class="flex-1 p-6 space-y-4">
-      <a href="#" class="block text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600">Home</a>
-      <a href="#" class="block text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600">Scores</a>
-      <a href="#" class="block text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600">News</a>
-      <a href="#" class="block text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600">Contact</a>
+      <a href="#" class="block text-lg font-medium hover:text-blue-600">Home</a>
+      <a href="#" class="block text-lg font-medium hover:text-blue-600">Scores</a>
+      <a href="#" class="block text-lg font-medium hover:text-blue-600">News</a>
+      <a href="#" class="block text-lg font-medium hover:text-blue-600">Contact</a>
     </nav>
-    <!-- Socials -->
-    <div class="p-4 text-center space-x-4">
-      <a href="#" class="inline-block text-gray-600 dark:text-gray-300 hover:text-blue-600"><i data-lucide="facebook"></i></a>
-      <a href="#" class="inline-block text-gray-600 dark:text-gray-300 hover:text-blue-600"><i data-lucide="send"></i></a> <!-- Telegram -->
-      <a href="#" class="inline-block text-gray-600 dark:text-gray-300 hover:text-blue-600"><i data-lucide="instagram"></i></a>
-      <a href="#" class="inline-block text-gray-600 dark:text-gray-300 hover:text-blue-600"><i data-lucide="linkedin"></i></a>
-      <a href="#" class="inline-block text-gray-600 dark:text-gray-300 hover:text-green-600"><i data-lucide="phone"></i></a>
-      <a href="#" class="inline-block text-gray-600 dark:text-gray-300 hover:text-blue-600"><i data-lucide="x"></i></a> <!-- X -->
-      <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">© Tadokk 2025</p>
+    <div class="p-4 flex flex-col items-center space-y-3">
+      <div class="flex space-x-4">
+        <a href="#"><i data-lucide="facebook" class="w-6 h-6 hover:text-blue-600"></i></a>
+        <a href="#"><i data-lucide="instagram" class="w-6 h-6 hover:text-pink-600"></i></a>
+        <a href="#"><i data-lucide="linkedin" class="w-6 h-6 hover:text-blue-700"></i></a>
+        <a href="#"><i data-lucide="x" class="w-6 h-6 hover:text-black"></i></a>
+        <a href="#"><i data-lucide="youtube" class="w-6 h-6 hover:text-red-600"></i></a>
+        <a href="#"><i data-lucide="whatsapp" class="w-6 h-6 hover:text-green-600"></i></a>
+        <a href="#"><i data-lucide="github" class="w-6 h-6 hover:text-gray-800"></i></a>
+      </div>
+      <p class="mt-2 text-xs text-gray-500">© Tadokk 2025</p>
     </div>
   </div>
 
@@ -142,59 +128,48 @@
     const errorMessage = document.getElementById('error-message');
     const upcomingContainer = document.getElementById('upcoming-container');
 
-    // Parse CSV
     function parseCSV(text) {
       const lines = text.trim().split('\n');
       const headers = lines[0].split(',').map(h => h.trim());
       return lines.slice(1).map(line => {
         const values = line.split(',').map(v => v.trim());
         let row = {};
-        headers.forEach((h, i) => row[h] = values[i]);
+        headers.forEach((h,i) => row[h] = values[i]);
         return row;
       });
     }
 
     function renderScores(data) {
       scoresContainer.innerHTML = '';
-      const live = data.filter(match => match.Status && match.Status.toLowerCase() !== "upcoming");
-      if (live.length === 0) {
-        scoresContainer.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">No live scores.</p>';
+      const live = data.filter(m => m.Status && m.Status.toLowerCase() !== "upcoming");
+      if (!live.length) {
+        scoresContainer.innerHTML = '<p class="text-center text-gray-500">No live scores.</p>';
         return;
       }
-      live.forEach(score => {
-        const card = document.createElement('div');
-        card.className = 'score-card p-4 md:p-6 rounded-xl shadow-md dark:bg-gray-800';
-        card.innerHTML = `
-          <div class="flex justify-between mb-4">
-            <span class="font-bold">${score.TeamA}</span>
-            <span class="text-blue-600 font-extrabold">${score.ScoreA}</span>
-          </div>
-          <div class="flex justify-between mb-4">
-            <span class="font-bold">${score.TeamB}</span>
-            <span class="text-blue-600 font-extrabold">${score.ScoreB}</span>
-          </div>
-          <p class="text-center text-xs text-gray-500 dark:text-gray-400">${score.Status}</p>
-        `;
-        scoresContainer.appendChild(card);
+      live.forEach(s => {
+        scoresContainer.innerHTML += `
+          <div class="p-4 rounded-xl shadow-md bg-white hover:scale-[1.02] transition">
+            <div class="flex justify-between mb-4"><span class="font-bold">${s.TeamA}</span><span class="text-blue-600 font-extrabold">${s.ScoreA||''}</span></div>
+            <div class="flex justify-between mb-4"><span class="font-bold">${s.TeamB}</span><span class="text-blue-600 font-extrabold">${s.ScoreB||''}</span></div>
+            <p class="text-center text-xs text-gray-500">${s.Status||''}</p>
+          </div>`;
       });
     }
 
     function renderUpcoming(data) {
       upcomingContainer.innerHTML = '';
-      const upcoming = data.filter(match => match.Status && match.Status.toLowerCase() === "upcoming");
-      if (upcoming.length === 0) {
-        upcomingContainer.innerHTML = '<p class="text-gray-500 dark:text-gray-400">No upcoming matches listed.</p>';
+      const upcoming = data.filter(m => m.Status && m.Status.toLowerCase() === "upcoming");
+      if (!upcoming.length) {
+        upcomingContainer.innerHTML = '<p class="text-gray-500">No upcoming matches listed.</p>';
         return;
       }
-      upcoming.forEach(match => {
-        const item = document.createElement('div');
-        item.className = 'p-4 rounded-lg bg-gray-50 dark:bg-gray-800 shadow transition ease-in-out duration-300 hover:scale-[1.02]';
-        const dateStr = match.NextMatch ? new Date(match.NextMatch).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : "TBA";
-        item.innerHTML = `
-          <p class="font-bold">${match.TeamA} vs ${match.TeamB}</p>
-          <p class="text-sm text-gray-600 dark:text-gray-400">${dateStr}</p>
-        `;
-        upcomingContainer.appendChild(item);
+      upcoming.forEach(m => {
+        const dateStr = m.NextMatch ? new Date(m.NextMatch).toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric",weekday:"long"}) : "TBA";
+        upcomingContainer.innerHTML += `
+          <div class="p-4 rounded-lg bg-gray-50 shadow hover:scale-[1.02] transition">
+            <p class="font-bold">${m.TeamA} vs ${m.TeamB}</p>
+            <p class="text-sm text-gray-600">${dateStr}</p>
+          </div>`;
       });
     }
 
@@ -206,8 +181,8 @@
         const data = parseCSV(text);
         renderScores(data);
         renderUpcoming(data);
-        lastUpdated.textContent = new Date().toLocaleString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-      } catch (err) {
+        lastUpdated.textContent = new Date().toLocaleString(undefined,{month:"long",day:"numeric",year:"numeric",weekday:"long",hour:"2-digit",minute:"2-digit"});
+      } catch {
         errorMessage.classList.remove('hidden');
       } finally {
         loadingIndicator.classList.add('hidden');
@@ -217,30 +192,28 @@
     document.addEventListener("DOMContentLoaded", () => {
       fetchScores();
       setInterval(fetchScores, REFRESH_INTERVAL_MS);
-
-      // Hide intro & show content
       setTimeout(() => {
         document.getElementById("intro-screen").style.display = "none";
         document.getElementById("page-content").classList.remove("opacity-0");
-      }, 2000);
+      }, 3500);
     });
 
     // Sidebar
-    const sidebar = document.getElementById("sidebar");
-    const overlay = document.getElementById("overlay");
+    const sidebar = document.getElementById("sidebar"), overlay = document.getElementById("overlay");
     document.getElementById("open-nav").onclick = () => { sidebar.classList.add("active"); overlay.classList.remove("hidden"); };
     document.getElementById("close-nav").onclick = () => { sidebar.classList.remove("active"); overlay.classList.add("hidden"); };
     overlay.onclick = () => { sidebar.classList.remove("active"); overlay.classList.add("hidden"); };
 
-    // Theme toggle with localStorage
+    // Theme toggle
     const themeToggle = document.getElementById("theme-toggle");
-    if (localStorage.getItem("theme") === "dark") document.documentElement.classList.add("dark");
-    themeToggle.addEventListener("click", () => {
-      const isDark = document.documentElement.classList.toggle("dark");
-      localStorage.setItem("theme", isDark ? "dark" : "light");
-    });
+    themeToggle.onclick = () => {
+      document.documentElement.classList.toggle("dark");
+      const icon = themeToggle.querySelector("i");
+      icon.setAttribute("data-lucide", document.documentElement.classList.contains("dark") ? "sun" : "moon");
+      lucide.createIcons();
+    };
 
     lucide.createIcons();
   </script>
 </body>
-</html
+</html>
