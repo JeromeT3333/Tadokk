@@ -4,75 +4,150 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Live Scores</title>
-  <!-- Tailwind CSS CDN -->
+  <link rel="icon" href="Tadokkico.ico" type="image/x-icon">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f3f4f6;
-      color: #1f2937;
-    }
+    body { font-family: 'Inter', sans-serif; }
     .score-card {
       background-color: #ffffff;
-      border: 1px solid #e5e7eb;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .score-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-                  0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    .overlay { background: rgba(0, 0, 0, 0.5); }
+    .sidebar { transform: translateX(100%); transition: transform 0.3s ease; }
+    .sidebar.active { transform: translateX(0); }
+    /* Intro Animation */
+    #intro-screen {
+      animation: splash 2s forwards;
+    }
+    @keyframes splash {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 1; }
+      80% { transform: scale(0.2); opacity: 0.8; transform-origin: top left; }
+      100% { transform: scale(0); opacity: 0; transform-origin: top left; }
+    }
+    /* Logo loader animation */
+    .logo-bounce {
+      animation: bounceScale 1.5s infinite ease-in-out;
+    }
+    @keyframes bounceScale {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
     }
   </style>
 </head>
-<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
+<body class="bg-gray-100 dark:bg-gray-950 dark:text-gray-100 min-h-screen flex flex-col items-center justify-start">
 
-  <!-- Main Container -->
-  <div class="w-full max-w-4xl mx-auto">
-    <!-- Header -->
-    <header class="text-center py-6 md:py-8 bg-blue-600 text-white rounded-t-lg shadow-lg">
+  <!-- Splash Screen -->
+  <div id="intro-screen" class="fixed inset-0 bg-blue-600 flex items-center justify-center z-50">
+    <img src="Tadokkico.png" alt="Tadokk Logo" class="h-24 w-24 animate-pulse">
+  </div>
+
+  <!-- Top Header -->
+  <header class="w-full flex items-center justify-between py-6 md:py-8 bg-blue-600 text-white shadow-lg relative px-6">
+    <!-- ✅ Logo left corner -->
+    <a href="index.html">
+      <img src="Tadokkico.png" alt="Tadokk Logo" class="h-10 w-10">
+    </a>
+    <div class="text-center">
       <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight">Live Scores</h1>
       <p class="text-sm md:text-lg mt-2 font-medium opacity-90">Powered by Tadokk</p>
-    </header>
+    </div>
+    <!-- Hamburger -->
+    <button id="open-nav" class="text-white text-3xl">
+      &#9776;
+    </button>
+  </header>
 
-    <!-- Loading Indicator -->
-    <div id="loading" class="text-center py-10" style="display: none;">
-      <svg class="animate-spin h-10 w-10 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-      </svg>
-      <p class="mt-4 text-gray-600">Fetching scores...</p>
+  <!-- Main Content -->
+  <div class="w-full max-w-4xl mx-auto transition ease-in-out duration-500 opacity-0" id="page-content">
+    <!-- Loading -->
+    <div id="loading" class="text-center py-10 hidden">
+      <img src="Tadokkico.png" alt="Loading Logo" class="h-16 w-16 mx-auto logo-bounce">
+      <p class="mt-4 text-gray-600 dark:text-gray-300">Fetching scores...</p>
     </div>
 
-    <!-- Scores Container -->
-    <main id="scores-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 md:p-8 bg-white rounded-b-lg shadow-lg"></main>
+    <!-- Scores Section -->
+    <main id="scores-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 md:p-8 bg-white dark:bg-gray-900 rounded-lg shadow-lg"></main>
 
-    <!-- Last Updated Timestamp -->
-    <footer class="text-center text-gray-500 text-xs mt-4">
+    <!-- Last Updated -->
+    <footer class="text-center text-gray-500 dark:text-gray-400 text-xs mt-4">
       Last updated: <span id="last-updated">--</span>
     </footer>
 
-    <!-- Error Message -->
-    <div id="error-message" class="text-center mt-4 text-red-600 font-medium" style="display: none;">
-      <p>Failed to load scores. Please do Hold as our team is working on it!</p>
+    <!-- ✅ Up Next Section -->
+    <section id="up-next" class="p-6 md:p-8 bg-white dark:bg-gray-900 mt-6 rounded-lg shadow-lg">
+      <h2 class="text-xl font-bold text-blue-600 mb-4">Up Next</h2>
+      <div id="upcoming-container" class="space-y-4">
+        <p class="text-gray-500 dark:text-gray-400">No upcoming matches listed.</p>
+      </div>
+    </section>
+
+    <!-- Error -->
+    <div id="error-message" class="text-center mt-4 text-red-600 font-medium hidden">
+      <p>Failed to load scores. Please hold on as our team is working on it!</p>
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div id="overlay" class="overlay fixed inset-0 hidden z-20"></div>
+
+  <!-- Sidebar -->
+  <div id="sidebar" class="sidebar fixed top-0 right-0 h-full w-72 bg-white/70 dark:bg-gray-900/70 backdrop-blur-md shadow-lg z-30 flex flex-col">
+    <!-- Top -->
+    <div class="flex items-center justify-between p-4">
+      <!-- Logo -->
+      <a href="index.html">
+        <img src="Tadokkico.png" alt="Tadokk Logo" class="h-10 w-10">
+      </a>
+      <div class="flex items-center space-x-4">
+        <!-- Theme toggle -->
+        <button id="theme-toggle" class="text-gray-600 dark:text-gray-300 hover:text-blue-600">
+          <i data-lucide="moon"></i>
+        </button>
+        <!-- Close -->
+        <button id="close-nav" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 text-2xl font-bold">&times;</button>
+      </div>
+    </div>
+    <!-- Nav links -->
+    <nav class="flex-1 p-6 space-y-4">
+      <a href="#" class="block text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600">Home</a>
+      <a href="#" class="block text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600">Scores</a>
+      <a href="#" class="block text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600">News</a>
+      <a href="#" class="block text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600">Contact</a>
+    </nav>
+    <!-- Socials -->
+    <div class="p-4 text-center space-x-4">
+      <a href="#" class="inline-block text-gray-600 dark:text-gray-300 hover:text-blue-600"><i data-lucide="facebook"></i></a>
+      <a href="#" class="inline-block text-gray-600 dark:text-gray-300 hover:text-blue-600"><i data-lucide="send"></i></a> <!-- Telegram -->
+      <a href="#" class="inline-block text-gray-600 dark:text-gray-300 hover:text-blue-600"><i data-lucide="instagram"></i></a>
+      <a href="#" class="inline-block text-gray-600 dark:text-gray-300 hover:text-blue-600"><i data-lucide="linkedin"></i></a>
+      <a href="#" class="inline-block text-gray-600 dark:text-gray-300 hover:text-green-600"><i data-lucide="phone"></i></a>
+      <a href="#" class="inline-block text-gray-600 dark:text-gray-300 hover:text-blue-600"><i data-lucide="x"></i></a> <!-- X -->
+      <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">© Tadokk 2025</p>
     </div>
   </div>
 
   <script>
-    const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSSLEeAAtj-UvuFem6g0n-oKn7Y1Kr5O1e3OvYUwOjwOdF5Xh70Qz5N1xvrxuSYNk6GnJdd5W1xK6Dx/pub?output=csv";
-    const SCORES_URL = "https://api.allorigins.win/raw?url=" + encodeURIComponent(SHEET_URL);
-    const REFRESH_INTERVAL_MS = 30000; // 30s
+    const SCORES_URL = "https://api.allorigins.win/raw?url=" + encodeURIComponent("https://docs.google.com/spreadsheets/d/e/2PACX-1vSSLEeAAtj-UvuFem6g0n-oKn7Y1Kr5O1e3OvYUwOjwOdF5Xh70Qz5N1xvrxuSYNk6GnJdd5W1xK6Dx/pub?output=csv");
+    const REFRESH_INTERVAL_MS = 30000;
 
-    const scoresContainer = document.getElementById("scores-container");
-    const loadingIndicator = document.getElementById("loading");
-    const lastUpdated = document.getElementById("last-updated");
-    const errorMessage = document.getElementById("error-message");
+    const scoresContainer = document.getElementById('scores-container');
+    const loadingIndicator = document.getElementById('loading');
+    const lastUpdated = document.getElementById('last-updated');
+    const errorMessage = document.getElementById('error-message');
+    const upcomingContainer = document.getElementById('upcoming-container');
 
+    // Parse CSV
     function parseCSV(text) {
-      const lines = text.trim().split("\n");
-      if (lines.length < 2) return [];
-      const headers = lines[0].split(",").map(h => h.trim());
+      const lines = text.trim().split('\n');
+      const headers = lines[0].split(',').map(h => h.trim());
       return lines.slice(1).map(line => {
-        const values = line.split(",").map(v => v.trim());
+        const values = line.split(',').map(v => v.trim());
         let row = {};
         headers.forEach((h, i) => row[h] = values[i]);
         return row;
@@ -80,54 +155,92 @@
     }
 
     function renderScores(data) {
-      scoresContainer.innerHTML = "";
-      if (data.length === 0) {
-        scoresContainer.innerHTML = '<p class="text-center text-gray-500 w-full col-span-full">No scores available.</p>';
+      scoresContainer.innerHTML = '';
+      const live = data.filter(match => match.Status && match.Status.toLowerCase() !== "upcoming");
+      if (live.length === 0) {
+        scoresContainer.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">No live scores.</p>';
         return;
       }
-      data.forEach(score => {
-        const card = document.createElement("div");
-        card.className = "score-card p-4 md:p-6 rounded-xl shadow-md";
+      live.forEach(score => {
+        const card = document.createElement('div');
+        card.className = 'score-card p-4 md:p-6 rounded-xl shadow-md dark:bg-gray-800';
         card.innerHTML = `
-          <div class="flex items-center justify-between mb-4">
-            <span class="text-sm md:text-base font-bold text-gray-800">${score.TeamA}</span>
-            <span class="text-xl md:text-2xl font-extrabold text-blue-600">${score.ScoreA}</span>
+          <div class="flex justify-between mb-4">
+            <span class="font-bold">${score.TeamA}</span>
+            <span class="text-blue-600 font-extrabold">${score.ScoreA}</span>
           </div>
-          <div class="flex items-center justify-between mb-4">
-            <span class="text-sm md:text-base font-bold text-gray-800">${score.TeamB}</span>
-            <span class="text-xl md:text-2xl font-extrabold text-blue-600">${score.ScoreB}</span>
+          <div class="flex justify-between mb-4">
+            <span class="font-bold">${score.TeamB}</span>
+            <span class="text-blue-600 font-extrabold">${score.ScoreB}</span>
           </div>
-          <p class="text-center text-xs md:text-sm text-gray-500 font-medium">${score.Status}</p>
+          <p class="text-center text-xs text-gray-500 dark:text-gray-400">${score.Status}</p>
         `;
         scoresContainer.appendChild(card);
       });
     }
 
-    async function fetchScores() {
-      loadingIndicator.style.display = "block";
-      scoresContainer.style.display = "none";
-      errorMessage.style.display = "none";
+    function renderUpcoming(data) {
+      upcomingContainer.innerHTML = '';
+      const upcoming = data.filter(match => match.Status && match.Status.toLowerCase() === "upcoming");
+      if (upcoming.length === 0) {
+        upcomingContainer.innerHTML = '<p class="text-gray-500 dark:text-gray-400">No upcoming matches listed.</p>';
+        return;
+      }
+      upcoming.forEach(match => {
+        const item = document.createElement('div');
+        item.className = 'p-4 rounded-lg bg-gray-50 dark:bg-gray-800 shadow transition ease-in-out duration-300 hover:scale-[1.02]';
+        const dateStr = match.NextMatch ? new Date(match.NextMatch).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : "TBA";
+        item.innerHTML = `
+          <p class="font-bold">${match.TeamA} vs ${match.TeamB}</p>
+          <p class="text-sm text-gray-600 dark:text-gray-400">${dateStr}</p>
+        `;
+        upcomingContainer.appendChild(item);
+      });
+    }
 
+    async function fetchScores() {
+      loadingIndicator.classList.remove('hidden');
       try {
-        const response = await fetch(SCORES_URL);
-        if (!response.ok) throw new Error("Network error");
-        const text = await response.text();
-        const scoresData = parseCSV(text);
-        renderScores(scoresData);
-        lastUpdated.textContent = new Date().toLocaleTimeString();
+        const res = await fetch(SCORES_URL);
+        const text = await res.text();
+        const data = parseCSV(text);
+        renderScores(data);
+        renderUpcoming(data);
+        lastUpdated.textContent = new Date().toLocaleString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
       } catch (err) {
-        console.error("Error fetching scores:", err);
-        errorMessage.style.display = "block";
+        errorMessage.classList.remove('hidden');
       } finally {
-        loadingIndicator.style.display = "none";
-        scoresContainer.style.display = "grid";
+        loadingIndicator.classList.add('hidden');
       }
     }
 
     document.addEventListener("DOMContentLoaded", () => {
       fetchScores();
       setInterval(fetchScores, REFRESH_INTERVAL_MS);
+
+      // Hide intro & show content
+      setTimeout(() => {
+        document.getElementById("intro-screen").style.display = "none";
+        document.getElementById("page-content").classList.remove("opacity-0");
+      }, 2000);
     });
+
+    // Sidebar
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    document.getElementById("open-nav").onclick = () => { sidebar.classList.add("active"); overlay.classList.remove("hidden"); };
+    document.getElementById("close-nav").onclick = () => { sidebar.classList.remove("active"); overlay.classList.add("hidden"); };
+    overlay.onclick = () => { sidebar.classList.remove("active"); overlay.classList.add("hidden"); };
+
+    // Theme toggle with localStorage
+    const themeToggle = document.getElementById("theme-toggle");
+    if (localStorage.getItem("theme") === "dark") document.documentElement.classList.add("dark");
+    themeToggle.addEventListener("click", () => {
+      const isDark = document.documentElement.classList.toggle("dark");
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+    });
+
+    lucide.createIcons();
   </script>
 </body>
-</html>
+</html
