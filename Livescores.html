@@ -10,14 +10,14 @@
   <style>
     body { font-family: 'Inter', sans-serif; }
 
-    /* Splash animation (longer cover, quicker shrink) */
+    /* Splash animation */
     #intro-screen {
       animation: splash 3.5s forwards;
       transform-origin: top left;
     }
     @keyframes splash {
       0%   { transform: scale(1); opacity: 1; border-radius: 0; }
-      70%  { transform: scale(1); opacity: 1; border-radius: 0; } /* Hold */
+      70%  { transform: scale(1); opacity: 1; border-radius: 0; }
       85%  { transform: scale(0.7); opacity: 0.9; border-radius: 50px; }
       100% { transform: scale(0); opacity: 0; border-radius: 50px; }
     }
@@ -79,6 +79,19 @@
       </div>
     </section>
 
+    <!-- Embedded Form Section -->
+    <section id="feedback-form" class="p-6 bg-white mt-6 rounded-2xl shadow-lg">
+      <h2 class="text-2xl font-extrabold text-blue-600 mb-4 text-center">Share Your Feedback</h2>
+      <p class="text-gray-600 text-center mb-6">We’d love to hear from you! Fill out the form below:</p>
+      <div class="rounded-xl overflow-hidden shadow-lg border border-gray-200">
+        <iframe 
+          src="https://form.svhrt.com/68d2d15c4e60dbe1c6db711f" 
+          class="w-full h-[650px] border-0"
+          loading="lazy">
+        </iframe>
+      </div>
+    </section>
+
     <div id="error-message" class="text-center mt-4 text-red-600 font-medium hidden">
       <p>Failed to load scores. Please hold on!</p>
     </div>
@@ -118,6 +131,7 @@
     </div>
   </div>
 
+  <!-- Script -->
   <script>
     const SCORES_URL = "https://api.allorigins.win/raw?url=" + encodeURIComponent("https://docs.google.com/spreadsheets/d/e/2PACX-1vSSLEeAAtj-UvuFem6g0n-oKn7Y1Kr5O1e3OvYUwOjwOdF5Xh70Qz5N1xvrxuSYNk6GnJdd5W1xK6Dx/pub?output=csv");
     const REFRESH_INTERVAL_MS = 30000;
