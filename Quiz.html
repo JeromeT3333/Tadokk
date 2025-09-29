@@ -276,4 +276,174 @@ footer{text-align:center;margin-top:16px;color:var(--muted);font-size:0.95rem}
   // start quiz
   startBtn.addEventListener('click', ()=>{
     const name = (document.getElementById('studentName').value||'').trim();
-    const email = (document.getElem
+    const email = (document.getElementById('studentEmail').value||'').trim();
+    if (!name){ alert('Please enter your full name'); return; }
+    if (!email || !email.includes('@')){ alert('Please enter a valid email address'); return; }
+    studentName = name; studentEmail = email;
+    answers = Array(questions.length).fill(null);
+    // shuffle questions before presenting
+    for (let i = questions.length -1; i>0; i--){ const j = Math.floor(Math.random()*(i+1)); [questions[i],questions[j]]=[questions[j],questions[i]]; }
+    startCard.style.display = 'none'; quizCard.style.display = 'block'; currentPage = 0; renderPage(currentPage);
+    resultsDiv.style.display = 'none'; exportBtn.style.display = 'none';
+    startTimer();
+  });
+
+  prevBtn.addEventListener('click', ()=>{ if (currentPage>0){ currentPage--; renderPage(currentPage); } });
+  nextBtn.addEventListener('click', ()=>{ if (currentPage < Math.ceil(questions.length/pageSize)-1){ currentPage++; renderPage(currentPage); } });
+
+  shuffleBtn.addEventListener('click', ()=>{
+    for (let i = questions.length -1; i>0; i--){ const j = Math.floor(Math.random()*(i+1)); [questions[i],questions[j]]=[questions[j],questions[i]]; }
+    answers = Array(questions.length).fill(null); currentPage = 0; renderPage(currentPage); resultsDiv.style.display='none'; exportBtn.style.display='none';
+  });
+
+  themeBtn.addEventListener('click', ()=>{
+    document.documentElement.classList.toggle('light');
+    themeBtn.textContent = document.documentElement.classList.contains('light') ? '☀️ Light' : '🌙 Dark';
+  });
+
+  // scoring + result display
+  function submitQuiz(isAuto=false){
+    clearInterval(timerInterval);
+    const feedback=[]; let correct=0; const topicStats={};
+    for (let i=0;i<questions.length;i++){
+      const expected = questions[i].a ? 'true' : 'false';
+      const given = answers[i] || null;
+      const isCorrect = given === expected;
+      if (isCorrect) correct++;
+      const t = questions[i].topic || 'General';
+      if (!topicStats[t]) topicStats[t] = {total:0,wrong:0};
+      topicStats[t].total++; if (!isCorrect) topicStats[t].wrong++;
+      feedback.push({i, q: questions[i].q, given, expected, isCorrect});
+    }
+    const percent = Math.round((correct/questions.length)*100);
+    const focusAreas = Object.entries(topicStats).map(([t,v])=>({topic:t,missed:v.wrong,total:v.total})).filter(x=>x.missed>0).sort((a,b)=>b.missed-a.missed);
+
+    let html = `<h3>Results — ${escapeHtml(studentName)}</h3>`;
+    html += `<p><strong>Email:</strong> ${escapeHtml(studentEmail)}</p>`;
+    html += `<p><strong>Score:</strong> ${correct} / ${questions.length} (${percent}%)</p>`;
+    if (focusAreas.length===0) html += `<p>Excellent — no topic misses detected.</p>`;
+    else { html += `<p><strong>Focus areas:</strong></p><ul>`; focusAreas.forEach(f=> html += `<li>${escapeHtml(f.topic)} — missed ${f.missed} / ${f.total}</li>`); html += `</ul>`; }
+    html += `<h4>Corrections (web only)</h4>`;
+    feedback.forEach(f=> html += `<div class="${f.isCorrect?'correct':'wrong'}">Q${f.i+1}. ${escapeHtml(f.q)}<br>Your: ${f.given||'No answer'} | Correct: ${f.expected}</div>`);
+
+    resultsDiv.innerHTML = html; resultsDiv.style.display = 'block'; exportBtn.style.display = 'inline-block';
+    window.__tadokk_last_report = { name: studentName, email: studentEmail, score: correct, total: questions.length, percent, focusAreas };
+
+    // send to google sheets and auto-download
+    try{ sendToSheets(window.__tadokk_last_report); }catch(e){ console.warn('Sheets send error', e); }
+    try{ generateAndDownloadReport(window.__tadokk_last_report); }catch(e){ console.error('Auto-download failed', e); }
+    if (!isAuto) resultsDiv.scrollIntoView({behavior:'smooth'});
+  }
+
+  submitBtn.addEventListener('click', ()=> submitQuiz(false));
+
+  // send to Google Sheets (best-effort)
+  function sendToSheets(report){
+    const payload = { name: report.name, email: report.email, score: report.score, percent: report.percent, focusAreas: (report.focusAreas||[]).map(f=>f.topic||f) };
+    fetch(SHEET_WEBAPP_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
+      .then(r=> r.text().then(t=> console.log('Sheets response', r.status, t)) )
+      .catch(err=>{
+        console.warn('Sheets send failed, fallback no-cors', err);
+        try{ fetch(SHEET_WEBAPP_URL, { method:'POST', mode:'no-cors', body: JSON.stringify(payload) }); }catch(e){}
+      });
+  }
+
+  // IMAGE -> DATA URL (draws pageLogo onto canvas to embed)
+  function imageElementToDataUrl(imgEl){
+    return new Promise((resolve)=>{
+      try {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+          try {
+            const c = document.createElement('canvas');
+            c.width = img.width;
+            c.height = img.height;
+            const ctx = c.getContext('2d');
+            ctx.drawImage(img,0,0);
+            const data = c.toDataURL('image/png');
+            resolve(data);
+          } catch(e) { console.warn('Canvas draw failed', e); resolve(null); }
+        };
+        img.onerror = ()=> { console.warn('Could not load image for embedding'); resolve(null); };
+        // try source from existing element to avoid re-requesting; fallback to its src
+        const existing = document.getElementById('pageLogo');
+        img.src = existing && existing.src ? existing.src : 'Tadokkico1.png';
+      } catch(e){ console.warn('imageElementToDataUrl error', e); resolve(null); }
+    });
+  }
+
+  // generate and download result file (PDF)
+  async function generateAndDownloadReport(r){
+    // wait for jsPDF to be available
+    if (!window.jspdf) { console.warn('jsPDF not loaded'); }
+    const { jsPDF } = window.jspdf || {};
+    const doc = new (jsPDF || function(){return {save:()=>{alert('Cannot create file: jsPDF not loaded')}}})();
+    if (!jsPDF) {
+      // not loaded properly — fallback: create a simple text file with summary
+      const text = `Name: ${r.name}\nEmail: ${r.email}\nScore: ${r.score}/${r.total} (${r.percent}%)\nFocus areas: ${r.focusAreas.map(f=>f.topic).join('; ')}`;
+      const blob = new Blob([text], {type:'text/plain'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `Tadokk_QuizReport_${sanitizeFilename(r.name)}.txt`;
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      return;
+    }
+
+    const pdf = new jsPDF({unit:'pt',format:'a4'});
+    const brand = [72,176,191];
+    pdf.setFontSize(18); pdf.setTextColor(...brand);
+    pdf.text('Muscle Physiology Quiz Report',40,60);
+    pdf.setFontSize(11); pdf.setTextColor(0,0,0);
+    pdf.text(`Name: ${r.name}`,40,86);
+    pdf.text(`Email: ${r.email}`,40,104);
+    pdf.text(`Date: ${new Date().toLocaleString()}`,40,122);
+    pdf.text(`Score: ${r.score} / ${r.total} (${r.percent}%)`,40,140);
+    let y = 162;
+    if (!r.focusAreas || r.focusAreas.length === 0) {
+      pdf.text('Focus Areas: None — excellent performance.',40,y); y += 18;
+    } else {
+      pdf.setFontSize(12); pdf.text('Focus Areas (topics):',40,y); y += 16; pdf.setFontSize(11);
+      r.focusAreas.forEach((f, idx) => {
+        const line = `${idx+1}. ${f.topic} — missed ${f.missed} / ${f.total}`;
+        const parts = pdf.splitTextToSize(line, pdf.internal.pageSize.getWidth() - 80);
+        pdf.text(parts,46,y);
+        y += parts.length * 14;
+        if (y > pdf.internal.pageSize.getHeight() - 140){ pdf.addPage(); y = 60; }
+      });
+    }
+
+    // embed logo (drawn via canvas to get dataURL)
+    const imgData = await imageElementToDataUrl(document.getElementById('pageLogo'));
+    const pageW = pdf.internal.pageSize.getWidth();
+    const pageH = pdf.internal.pageSize.getHeight();
+    const logoW = 100;
+    const logoH = 100 * 0.4;
+    const pages = pdf.getNumberOfPages();
+    for (let p = 1; p <= pages; p++) {
+      pdf.setPage(p);
+      if (imgData) {
+        try { pdf.addImage(imgData, 'PNG', pageW - logoW - 40, 30, logoW, logoH); } catch(e) { console.warn('addImage failed', e); }
+      }
+      pdf.setDrawColor(...brand); pdf.setLineWidth(0.6); pdf.line(40, pageH - 80, pageW - 40, pageH - 80);
+      pdf.setFontSize(10); pdf.setTextColor(0,0,0); pdf.text('Powered by Tadokk', 40, pageH - 60);
+    }
+
+    const filename = `Tadokk_QuizReport_${sanitizeFilename(r.name)}_${(new Date()).toISOString().slice(0,19).replace(/[:T]/g,'-')}.pdf`;
+    pdf.save(filename);
+  }
+
+  // backup export button (re-download)
+  exportBtn.addEventListener('click', ()=> {
+    const r = window.__tadokk_last_report;
+    if (!r) return alert('Submit first to download your result.');
+    generateAndDownloadReport(r);
+  });
+
+  // initial render
+  renderPage(0);
+
+})();
+</script>
+</body>
+</html>
