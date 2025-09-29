@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Muscle Physiology — 100 T/F Quiz</title>
+<style>
+:root{--bg:#0f1724;--card:#0b1220;--accent:#48b0bf;--muted:#9aa6b2;--correct:#1f7a1f;--wrong:#9b2b2b;--text:#e6eef6}
+:root.light{--bg:#f6f7fb;--card:#ffffff;--accent:#0d6efd;--muted:#3c4958;--correct:#1f7a1f;--wrong:#b02a37;--text:#111827}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Arial}
+.wrap{max-width:980px;margin:18px auto;padding:16px}
+header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+header img{max-height:40px;width:auto;object-fit:contain}
+h1{margin:0;font-size:1.2rem}
+.card{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,0.45)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.input{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);min-width:220px}
+.btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
+.ghost{background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--text);padding:8px 12px;border-radius:8px;cursor:pointer}
+.q{display:flex;justify-content:space-between;gap:12px;padding:10px;border-radius:8px;margin-bottom:8px;background:rgba(255,255,255,0.02)}
+.qtext{flex:1}
+.choices{display:flex;gap:12px;align-items:center}
+.correct{color:var(--correct);font-weight:600}
+.wrong{color:var(--wrong);font-weight:600}
+.results{margin-top:14px;padding:12px;border-radius:8px;background:rgba(0,0,0,0.12)}
+footer{text-align:center;margin-top:16px;color:var(--muted);font-size:0.95rem}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:8px}
+.timer{font-weight:600;color:var(--muted);margin-left:12px}
+@media(max-width:720px){ .choices{flex-wrap:wrap} header img{max-height:34px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div><h1>Muscle Physiology — 100 True/False Quiz</h1></div>
+    <div><img src="Tadokkico1.png" alt="Tadokkico logo"></div>
+  </header>
+
+  <div id="startCard" class="card">
+    <div class="row">
+      <input id="studentName" class="input" placeholder="Full name (required)"/>
+      <input id="studentEmail" class="input" placeholder="Email (required)"/>
+      <button id="startBtn" class="btn">Start Quiz</button>
+      <button id="themeBtn" class="ghost">🌙 Dark</button>
+      <button id="shuffleBtn" class="ghost">Shuffle</button>
+    </div>
+    <div style="margin-top:8px;color:var(--muted);font-size:0.95rem">
+      30-minute timer starts when you click <strong>Start Quiz</strong>. You may restart by refreshing.
+    </div>
+  </div>
+
+  <div id="quizCard" class="card" style="display:none;margin-top:12px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div class="pageinfo">
+        Page <span id="pageNum">1</span>/<span id="pageCount">10</span>
+        <span class="timer" id="timerDisplay"></span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button id="prevBtn" class="ghost">◀ Prev</button>
+        <button id="nextBtn" class="ghost">Next ▶</button>
+      </div>
+    </div>
+
+    <div id="quiz" style="max-height:520px;overflow:auto;padding-right:6px;margin-top:10px"></div>
+
+    <div class="nav">
+      <div style="color:var(--muted);font-size:0.95rem">Corrections appear after submit.</div>
+      <div><button id="submitBtn" class="btn">Submit</button></div>
+    </div>
+
+    <div id="results" class="results" style="display:none"></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:10px;gap:8px">
+      <button id="exportBtn" class="btn" style="display:none">⬇ Export PDF Report</button>
+    </div>
+  </div>
+
+  <footer>Powered by Tadokk</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+// JavaScript code with all 100 questions and quiz logic goes here
+</script>
+</body>
+</html>
