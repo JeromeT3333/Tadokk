@@ -3,16 +3,10 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Muscle Physiology — 100 T/F Quiz</title>
+<title>Muscle Physiology — 100 T/F Quiz (Simplified)</title>
 <style>
-  :root{
-    --bg:#0f1724; --card:#0b1220; --accent:#48b0bf; --muted:#9aa6b2;
-    --correct:#1f7a1f; --wrong:#9b2b2b; --text:#e6eef6;
-  }
-  :root.light{
-    --bg:#f6f7fb; --card:#ffffff; --accent:#0d6efd; --muted:#3c4958;
-    --correct:#1f7a1f; --wrong:#b02a37; --text:#111827;
-  }
+  :root{--bg:#0f1724;--card:#0b1220;--accent:#48b0bf;--muted:#9aa6b2;--correct:#1f7a1f;--wrong:#9b2b2b;--text:#e6eef6}
+  :root.light{--bg:#f6f7fb;--card:#ffffff;--accent:#0d6efd;--muted:#3c4958;--correct:#1f7a1f;--wrong:#b02a37;--text:#111827}
   html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
   .top-logo{position:fixed;top:8px;right:12px;max-height:56px;z-index:9999;width:auto}
   .wrap{max-width:980px;margin:28px auto;padding:16px;padding-top:10px}
@@ -53,6 +47,7 @@
     </div>
     <div style="margin-top:8px" class="small">30-minute timer starts when you click <strong>Start Quiz</strong>. Refresh to restart attempt.</div>
   </div>
+
   <div id="quizCard" class="card" style="display:none;margin-top:12px">
     <div style="display:flex;justify-content:space-between;align-items:center">
       <div class="pageinfo small">Page <span id="pageNum">1</span>/<span id="pageCount">10</span>
@@ -76,111 +71,125 @@
 
 <script>
 (() => {
+  // Keep Sheets URL if you want; user previously asked to keep integration.
   const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwcZ1H7uGtTIeySFGgMJIHAWppU0yqHe7ZoRUJElnMS2w36z5rZTFSQUDm7t918Bnbl/exec";
+
   let studentName='', studentEmail='', answers=[], timerInterval=null, timeLeft=30*60;
   const pageSize=10; let currentPage=0;
 
+  // === Simplified 100 questions taken directly from the user's material ===
   const questions = [
-{q:"Each skeletal muscle fiber is multinucleated, with nuclei located at the cell periphery.",a:true,topic:"Skeletal"},
-{q:"Satellite cells drive muscle repair but do not directly contract.",a:true,topic:"Skeletal"},
-{q:"Slow-twitch fibers (Type I) have more mitochondria than fast-twitch fibers.",a:true,topic:"Skeletal"},
-{q:"Type IIx fibers fatigue more rapidly than Type IIa fibers.",a:true,topic:"Skeletal"},
-{q:"Isometric contractions involve change in muscle length without change in tension.",a:false,topic:"Skeletal"},
-{q:"In concentric contraction, the muscle shortens while generating force.",a:true,topic:"Skeletal"},
-{q:"The length–tension relationship shows maximal force at optimal sarcomere length.",a:true,topic:"Skeletal"},
-{q:"Muscle hypertrophy is mainly due to increase in fiber size, not number.",a:true,topic:"Skeletal"},
-{q:"The “all-or-none” principle applies to entire muscles, not individual fibers.",a:false,topic:"Skeletal"},
-{q:"Complete tetanus occurs when stimuli arrive so rapidly that relaxation is impossible.",a:true,topic:"Skeletal"},
-{q:"The force–velocity curve shows greater load decreases contraction velocity.",a:true,topic:"Skeletal"},
-{q:"Myoglobin content is higher in slow oxidative fibers.",a:true,topic:"Skeletal"},
-{q:"Creatine phosphate is the first energy store tapped during rapid contraction.",a:true,topic:"Skeletal"},
-{q:"Muscle tone results from partial activation of motor units at rest.",a:true,topic:"Skeletal"},
-{q:"Muscle spindles detect changes in length and speed of stretch.",a:true,topic:"Skeletal"},
-{q:"Golgi tendon organs monitor muscle tension and prevent overloading.",a:true,topic:"Skeletal"},
-{q:"Recruitment of motor units follows the size principle.",a:true,topic:"Skeletal"},
-{q:"Cross-bridge cycling requires ATP binding for detachment.",a:true,topic:"Skeletal"},
-{q:"Rigor mortis occurs because ATP is absent, preventing cross-bridge detachment.",a:true,topic:"Skeletal"},
-{q:"Excitation–contraction coupling in skeletal muscle depends on extracellular calcium entry.",a:false,topic:"Skeletal"},
-{q:"Cardiac muscle fibers are branched and connected by intercalated discs.",a:true,topic:"Cardiac"},
-{q:"Gap junctions allow rapid spread of action potentials in cardiac muscle.",a:true,topic:"Cardiac"},
-{q:"Pacemaker potential is primarily due to “funny” Na⁺ currents (If).",a:true,topic:"Cardiac"},
-{q:"Phase 0 of the ventricular action potential is mediated by fast Na⁺ channels.",a:true,topic:"Cardiac"},
-{q:"The plateau phase is sustained by L-type calcium channel influx.",a:true,topic:"Cardiac"},
-{q:"Cardiac muscle can undergo tetanus due to long refractory period.",a:false,topic:"Cardiac"},
-{q:"The Frank–Starling law relates end-diastolic volume to stroke volume.",a:true,topic:"Cardiac"},
-{q:"Beta-adrenergic stimulation increases heart rate and contractility.",a:true,topic:"Cardiac"},
-{q:"The AV node slows conduction to permit ventricular filling.",a:true,topic:"Cardiac"},
-{q:"Ischemia forces cardiac muscle to rely more on anaerobic glycolysis.",a:true,topic:"Cardiac"},
-{q:"Cardiac troponin is a clinical marker of myocardial injury.",a:true,topic:"Cardiac"},
-{q:"Potassium efflux contributes to repolarization of cardiac myocytes.",a:true,topic:"Cardiac"},
-{q:"Excess extracellular K⁺ can increase cardiac excitability.",a:false,topic:"Cardiac"},
-{q:"The Purkinje system conducts impulses faster than the AV node.",a:true,topic:"Cardiac"},
-{q:"Conduction velocity is lowest at the AV node.",a:true,topic:"Cardiac"},
-{q:"Sympathetic stimulation increases slope of pacemaker depolarization.",a:true,topic:"Cardiac"},
-{q:"Cardiac muscle contraction is calcium-dependent via Ca²⁺-induced Ca²⁺ release.",a:true,topic:"Cardiac"},
-{q:"Ventricular fibrillation maintains cardiac output due to uncoordinated contractions.",a:false,topic:"Cardiac"},
-{q:"Calcium channel blockers reduce contractility by decreasing calcium influx.",a:true,topic:"Cardiac"},
-{q:"Unlike skeletal muscle, cardiac excitation–contraction coupling requires extracellular calcium.",a:true,topic:"Cardiac"},
-{q:"Smooth muscle lacks sarcomeres but contains actin and myosin filaments.",a:true,topic:"Smooth"},
-{q:"Dense bodies in smooth muscle act like Z-discs in skeletal muscle.",a:true,topic:"Smooth"},
-{q:"Contraction in smooth muscle is regulated by MLCK and Ca²⁺-calmodulin.",a:true,topic:"Smooth"},
-{q:"Troponin is absent in smooth muscle.",a:true,topic:"Smooth"},
-{q:"Smooth muscle can maintain tone with minimal ATP use via latch state.",a:true,topic:"Smooth"},
-{q:"Single-unit smooth muscle is electrically coupled via gap junctions.",a:true,topic:"Smooth"},
-{q:"Multi-unit smooth muscle fibers contract independently.",a:true,topic:"Smooth"},
-{q:"Rho-kinase increases contraction by inhibiting myosin light-chain phosphatase.",a:true,topic:"Smooth"},
-{q:"Smooth muscle contracts more quickly but fatigues faster than skeletal muscle.",a:false,topic:"Smooth"},
-{q:"Hormones such as oxytocin can regulate smooth muscle tone.",a:true,topic:"Smooth"},
-{q:"Nitric oxide relaxes smooth muscle by increasing cGMP.",a:true,topic:"Smooth"},
-{q:"Smooth muscle contraction depends partly on extracellular calcium entry.",a:true,topic:"Smooth"},
-{q:"Peristalsis is mediated by coordinated smooth muscle contraction.",a:true,topic:"Smooth"},
-{q:"Adrenergic stimulation always relaxes smooth muscle regardless of receptor subtype.",a:false,topic:"Smooth"},
-{q:"Smooth muscle can undergo hypertrophy and hyperplasia.",a:true,topic:"Smooth"},
-{q:"Calcium sparks from the sarcoplasmic reticulum regulate local contraction.",a:true,topic:"Smooth"},
-{q:"Pharmacomechanical coupling in smooth muscle does not require action potentials.",a:true,topic:"Smooth"},
-{q:"Myosin light chain phosphorylation is essential for initiating contraction.",a:true,topic:"Smooth"},
-{q:"Gap junctions facilitate coordinated contraction in visceral smooth muscle.",a:true,topic:"Smooth"},
-{q:"Some smooth muscles exhibit pacemaker activity.",a:true,topic:"Smooth"},
-{q:"At the neuromuscular junction, acetylcholine binds nicotinic receptors.",a:true,topic:"NMJ"},
-{q:"End-plate potentials are usually sufficient to trigger action potentials.",a:true,topic:"NMJ"},
-{q:"Botulinum toxin prevents ACh release by cleaving SNARE proteins.",a:true,topic:"NMJ"},
-{q:"Myasthenia gravis involves antibodies against postsynaptic ACh receptors.",a:true,topic:"NMJ"},
-{q:"Lambert-Eaton syndrome involves antibodies against presynaptic calcium channels.",a:true,topic:"NMJ"},
-{q:"Acetylcholinesterase rapidly breaks down ACh in the synaptic cleft.",a:true,topic:"NMJ"},
-{q:"Denervation hypersensitivity increases extrajunctional receptors.",a:true,topic:"NMJ"},
-{q:"Curare blocks nicotinic receptors, preventing depolarization.",a:true,topic:"NMJ"},
-{q:"Succinylcholine causes depolarizing neuromuscular blockade.",a:true,topic:"NMJ"},
-{q:"Quantal release refers to vesicles releasing fixed amounts of ACh.",a:true,topic:"NMJ"},
-{q:"Skeletal muscle action potentials rely on sodium influx.",a:true,topic:"NMJ"},
-{q:"The DHP receptor in skeletal muscle acts as a voltage sensor.",a:true,topic:"EC"},
-{q:"Calcium release from the sarcoplasmic reticulum occurs via RyR channels.",a:true,topic:"EC"},
-{q:"SERCA pumps resequester calcium into the SR.",a:true,topic:"EC"},
-{q:"Phospholamban regulates SERCA activity in cardiac muscle.",a:true,topic:"EC"},
-{q:"CICR is the dominant coupling mechanism in cardiac muscle.",a:true,topic:"EC"},
-{q:"RyR leak can cause muscle weakness.",a:true,topic:"EC"},
-{q:"T-tubules ensure synchronous activation of muscle fibers.",a:true,topic:"EC"},
-{q:"The plateau of cardiac AP is due to balance between Ca²⁺ influx and K⁺ efflux.",a:true,topic:"EC"},
-{q:"Na⁺/Ca²⁺ exchanger helps remove calcium from cardiac cells.",a:true,topic:"EC"},
-{q:"Oxidative phosphorylation yields ~36 ATP per glucose.",a:true,topic:"Energy"},
+// Skeletal 1-20
+{q:"Each skeletal muscle fiber contains multiple nuclei at its periphery.",a:true,topic:"Skeletal"},
+{q:"Satellite cells participate in muscle repair.",a:true,topic:"Skeletal"},
+{q:"Slow-twitch (type I) fibers have many mitochondria.",a:true,topic:"Skeletal"},
+{q:"Type IIx fibers fatigue slower than Type IIa.",a:false,topic:"Skeletal"},
+{q:"Isometric contraction changes muscle length.",a:false,topic:"Skeletal"},
+{q:"Concentric contraction shortens a muscle while it generates force.",a:true,topic:"Skeletal"},
+{q:"Optimal sarcomere length yields maximal force.",a:true,topic:"Skeletal"},
+{q:"Hypertrophy increases fiber size more than fiber number.",a:true,topic:"Skeletal"},
+{q:"The all-or-none law applies to individual muscle fibers.",a:true,topic:"Skeletal"},
+{q:"Tetanus happens if stimuli arrive too quickly for relaxation.",a:true,topic:"Skeletal"},
+{q:"Higher load generally reduces shortening velocity.",a:true,topic:"Skeletal"},
+{q:"Myoglobin concentration is greater in slow oxidative fibers.",a:true,topic:"Skeletal"},
+{q:"Phosphocreatine is used first during a very short burst of activity.",a:true,topic:"Skeletal"},
+{q:"Muscle tone arises from partial activation of motor units at rest.",a:true,topic:"Skeletal"},
+{q:"Muscle spindles sense changes in muscle length.",a:true,topic:"Skeletal"},
+{q:"Golgi tendon organs sense tension in tendons.",a:true,topic:"Skeletal"},
+{q:"Smaller motor units are recruited before larger ones (size principle).",a:true,topic:"Skeletal"},
+{q:"ATP is required for detachment of myosin from actin.",a:true,topic:"Skeletal"},
+{q:"Rigor mortis results from lack of ATP preventing crossbridge release.",a:true,topic:"Skeletal"},
+{q:"Extracellular calcium entry is required to trigger SR release in skeletal muscle.",a:false,topic:"Skeletal"},
+
+// Cardiac 21-40
+{q:"Cardiac muscle fibers are connected by intercalated discs.",a:true,topic:"Cardiac"},
+{q:"Gap junctions allow electrical coupling between cardiac cells.",a:true,topic:"Cardiac"},
+{q:"If (funny) currents contribute to pacemaker activity.",a:true,topic:"Cardiac"},
+{q:"Fast sodium channels mediate rapid upstroke in ventricular myocytes.",a:true,topic:"Cardiac"},
+{q:"L-type calcium channels contribute to the plateau phase.",a:true,topic:"Cardiac"},
+{q:"Cardiac muscle cannot sustain tetanus due to a long refractory period.",a:true,topic:"Cardiac"},
+{q:"Stroke volume increases with larger end-diastolic volume (Frank–Starling).",a:true,topic:"Cardiac"},
+{q:"Beta-adrenergic stimulation increases heart rate.",a:true,topic:"Cardiac"},
+{q:"The AV node delays conduction to allow ventricular filling.",a:true,topic:"Cardiac"},
+{q:"Ischemic heart muscle shifts to anaerobic metabolism.",a:true,topic:"Cardiac"},
+{q:"Cardiac troponin is a marker of myocardial injury.",a:true,topic:"Cardiac"},
+{q:"Potassium currents help repolarize cardiac cells.",a:true,topic:"Cardiac"},
+{q:"High extracellular potassium always increases excitability.",a:false,topic:"Cardiac"},
+{q:"Purkinje fibers conduct faster than AV nodal tissue.",a:true,topic:"Cardiac"},
+{q:"AV node has slower conduction velocity than atrial muscle.",a:true,topic:"Cardiac"},
+{q:"Sympathetic input increases the slope of pacemaker depolarization.",a:true,topic:"Cardiac"},
+{q:"Cardiac ECC involves calcium-induced calcium release.",a:true,topic:"Cardiac"},
+{q:"Ventricular fibrillation stops effective cardiac output.",a:true,topic:"Cardiac"},
+{q:"Calcium channel blockers reduce cardiac contractility.",a:true,topic:"Cardiac"},
+{q:"Cardiac excitation requires extracellular calcium to trigger SR release.",a:true,topic:"Cardiac"},
+
+// Smooth 41-60
+{q:"Smooth muscle does not have sarcomeres but contains actin and myosin.",a:true,topic:"Smooth"},
+{q:"Dense bodies anchor actin in smooth muscle.",a:true,topic:"Smooth"},
+{q:"MLCK activated by Ca2+-calmodulin initiates contraction in smooth muscle.",a:true,topic:"Smooth"},
+{q:"Troponin is not present in smooth muscle.",a:true,topic:"Smooth"},
+{q:"Smooth muscle can maintain tone with low ATP via a latch state.",a:true,topic:"Smooth"},
+{q:"Single-unit smooth muscle cells are electrically coupled.",a:true,topic:"Smooth"},
+{q:"Multi-unit smooth muscle acts independently.",a:true,topic:"Smooth"},
+{q:"Rho-kinase can increase smooth muscle contraction.",a:true,topic:"Smooth"},
+{q:"Smooth muscle generally contracts faster than skeletal muscle.",a:false,topic:"Smooth"},
+{q:"Hormonal signals like oxytocin affect smooth muscle tone.",a:true,topic:"Smooth"},
+{q:"Nitric oxide causes smooth muscle relaxation via cGMP.",a:true,topic:"Smooth"},
+{q:"Extracellular calcium contributes to smooth muscle contraction.",a:true,topic:"Smooth"},
+{q:"Peristalsis involves coordinated smooth muscle contraction.",a:true,topic:"Smooth"},
+{q:"Adrenergic effects on smooth muscle depend on receptor subtype.",a:true,topic:"Smooth"},
+{q:"Smooth muscle can grow by hyperplasia as well as hypertrophy.",a:true,topic:"Smooth"},
+{q:"Calcium sparks are local SR release events affecting smooth muscle.",a:true,topic:"Smooth"},
+{q:"Smooth muscle can contract without action potentials (pharmacomechanical coupling).",a:true,topic:"Smooth"},
+{q:"Myosin light chain phosphorylation is required to start contraction.",a:true,topic:"Smooth"},
+{q:"Gap junctions help coordinate visceral smooth muscle.",a:true,topic:"Smooth"},
+{q:"Some smooth muscles have intrinsic pacemaker activity.",a:true,topic:"Smooth"},
+
+// Excitation-contraction & NMJ 61-80
+{q:"Acetylcholine binds nicotinic receptors at the NMJ.",a:true,topic:"NMJ"},
+{q:"End-plate potentials usually trigger muscle action potentials.",a:true,topic:"NMJ"},
+{q:"Botulinum toxin blocks ACh release by cleaving SNARE proteins.",a:true,topic:"NMJ"},
+{q:"Myasthenia gravis targets postsynaptic ACh receptors.",a:true,topic:"NMJ"},
+{q:"Lambert–Eaton syndrome targets presynaptic calcium channels.",a:true,topic:"NMJ"},
+{q:"Acetylcholinesterase breaks down ACh in the synaptic cleft.",a:true,topic:"NMJ"},
+{q:"Denervation increases extrajunctional ACh receptors (hypersensitivity).",a:true,topic:"NMJ"},
+{q:"Curare blocks nicotinic receptors preventing depolarization.",a:true,topic:"NMJ"},
+{q:"Succinylcholine produces a depolarizing block at the NMJ.",a:true,topic:"NMJ"},
+{q:"Quantal release means fixed amounts of ACh per vesicle.",a:true,topic:"NMJ"},
+{q:"Skeletal muscle action potentials depend on sodium influx.",a:true,topic:"EC"},
+{q:"DHP receptors act as voltage sensors in skeletal muscle.",a:true,topic:"EC"},
+{q:"Ryanodine receptors mediate SR calcium release.",a:true,topic:"EC"},
+{q:"SERCA pumps return calcium to the SR after contraction.",a:true,topic:"EC"},
+{q:"Phospholamban modulates SERCA in cardiac muscle.",a:true,topic:"EC"},
+{q:"Calcium-induced-calcium-release is central in cardiac ECC.",a:true,topic:"EC"},
+{q:"Leaky ryanodine receptors can lead to muscle weakness.",a:true,topic:"EC"},
+{q:"T-tubules help synchronize release of calcium across fibers.",a:true,topic:"EC"},
+{q:"Cardiac action potential plateau balances Ca2+ influx and K+ efflux.",a:true,topic:"EC"},
+{q:"Na+/Ca2+ exchanger helps remove calcium from cardiac cells.",a:true,topic:"EC"},
+
+// Energy & Metabolism 81-90
+{q:"Oxidative phosphorylation produces far more ATP than glycolysis.",a:true,topic:"Energy"},
 {q:"Anaerobic glycolysis yields only 2 ATP per glucose.",a:true,topic:"Energy"},
-{q:"Phosphocreatine provides rapid ATP regeneration.",a:true,topic:"Energy"},
-{q:"Fatigue during prolonged activity is linked to glycogen depletion.",a:true,topic:"Energy"},
-{q:"Lactate can be converted back to glucose in the liver.",a:true,topic:"Energy"},
-{q:"Endurance training increases mitochondrial density.",a:true,topic:"Energy"},
-{q:"Sprint performance relies primarily on anaerobic glycolysis.",a:true,topic:"Energy"},
-{q:"Fatty acids are the major fuel during prolonged submaximal exercise.",a:true,topic:"Energy"},
-{q:"AMPK activation promotes energy conservation.",a:true,topic:"Energy"},
-{q:"VO₂max depends on both delivery and utilization of oxygen.",a:true,topic:"Energy"},
-{q:"Duchenne muscular dystrophy is due to dystrophin gene mutation.",a:true,topic:"Disease"},
-{q:"Becker muscular dystrophy is milder due to partially functional dystrophin.",a:true,topic:"Disease"},
-{q:"Rhabdomyolysis releases myoglobin that can damage kidneys.",a:true,topic:"Disease"},
-{q:"Malignant hyperthermia involves uncontrolled SR Ca²⁺ release.",a:true,topic:"Disease"},
-{q:"Statins can cause myopathy in some patients.",a:true,topic:"Disease"},
-{q:"Myotonic dystrophy involves delayed relaxation due to ion channel defects.",a:true,topic:"Disease"},
-{q:"Botulism causes flaccid paralysis.",a:true,topic:"Disease"},
-{q:"Hypokalemia can cause muscle weakness.",a:true,topic:"Disease"},
-{q:"Hyperkalemia can impair cardiac muscle function.",a:true,topic:"Disease"},
-{q:"Polymyositis is an inflammatory myopathy mediated by immune cells.",a:true,topic:"Disease"}
+{q:"Phosphocreatine rapidly regenerates ATP during brief activity.",a:true,topic:"Energy"},
+{q:"Glycogen depletion contributes to fatigue during long exercise.",a:true,topic:"Energy"},
+{q:"Lactate can be converted back to glucose by the liver.",a:true,topic:"Energy"},
+{q:"Endurance training increases mitochondrial content in muscle.",a:true,topic:"Energy"},
+{q:"Sprinting relies more on anaerobic metabolism than endurance.",a:true,topic:"Energy"},
+{q:"Fatty acids are main fuel during prolonged moderate exercise.",a:true,topic:"Energy"},
+{q:"AMPK activation promotes energy-conserving pathways.",a:true,topic:"Energy"},
+{q:"VO2max depends on oxygen delivery and utilization.",a:true,topic:"Energy"},
+
+// Disease & Clinical 91-100
+{q:"Duchenne muscular dystrophy is caused by dystrophin mutation.",a:true,topic:"Disease"},
+{q:"Becker dystrophy is a milder form of dystrophinopathy.",a:true,topic:"Disease"},
+{q:"Rhabdomyolysis releases myoglobin that can harm kidneys.",a:true,topic:"Disease"},
+{q:"Malignant hyperthermia involves uncontrolled SR calcium release.",a:true,topic:"Disease"},
+{q:"Statin therapy can sometimes cause myopathy.",a:true,topic:"Disease"},
+{q:"Myotonic dystrophy causes delayed muscle relaxation.",a:true,topic:"Disease"},
+{q:"Botulism causes flaccid paralysis by blocking ACh release.",a:true,topic:"Disease"},
+{q:"Low potassium (hypokalemia) may cause muscle weakness.",a:true,topic:"Disease"},
+{q:"High potassium (hyperkalemia) can impair cardiac function.",a:true,topic:"Disease"},
+{q:"Polymyositis is an immune-mediated inflammatory myopathy.",a:true,topic:"Disease"}
   ];
 
   // DOM refs
@@ -203,7 +212,7 @@
   pageCountSpan.textContent = Math.ceil(questions.length / pageSize);
 
   function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-  function sanitizeFilename(n){ return (n||'student').replace(/[^a-z0-9_\-]/ig,'_').slice(0,40); }
+  function sanitizeFilename(n){ return (n||'student').replace(/[^a-z0-9_\\-]/ig,'_').slice(0,40); }
 
   function shuffleArray(arr){
     for (let i = arr.length - 1; i > 0; i--){
