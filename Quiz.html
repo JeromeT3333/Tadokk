@@ -1,57 +1,61 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Muscle Physiology — 100 T/F Quiz</title>
 <style>
-:root{--bg:#0f1724;--card:#0b1220;--accent:#48b0bf;--muted:#9aa6b2;--correct:#1f7a1f;--wrong:#9b2b2b;--text:#e6eef6}
-:root.light{--bg:#f6f7fb;--card:#ffffff;--accent:#0d6efd;--muted:#3c4958;--correct:#1f7a1f;--wrong:#b02a37;--text:#111827}
-html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Arial}
-.top-logo{position:fixed;top:8px;right:12px;max-height:56px;z-index:9999;width:auto}
-.wrap{max-width:980px;margin:28px auto;padding:16px;padding-top:10px}
-header{display:flex;justify-content:flex-start;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;margin-right:160px}
-h1{margin:0;font-size:1.25rem}
-.card{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,0.45)}
-.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.input{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);min-width:220px}
-.btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
-.ghost{background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--text);padding:8px 12px;border-radius:8px;cursor:pointer}
-.q{display:flex;justify-content:space-between;gap:12px;padding:10px;border-radius:8px;margin-bottom:8px;background:rgba(255,255,255,0.02)}
-.qtext{flex:1}
-.choices{display:flex;gap:12px;align-items:center}
-.correct{color:var(--correct);font-weight:600}
-.wrong{color:var(--wrong);font-weight:600}
-.results{margin-top:14px;padding:12px;border-radius:8px;background:rgba(0,0,0,0.12)}
-footer{text-align:center;margin-top:16px;color:var(--muted);font-size:0.95rem}
-.nav{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:8px}
-.timer{font-weight:700;color:var(--muted);margin-left:12px}
-.small{font-size:0.9rem;color:var(--muted)}
-@media(max-width:720px){ .choices{flex-wrap:wrap} .top-logo{max-height:44px} header{margin-right:100px} }
+  :root{
+    --bg:#0f1724; --card:#0b1220; --accent:#48b0bf; --muted:#9aa6b2;
+    --correct:#1f7a1f; --wrong:#9b2b2b; --text:#e6eef6;
+  }
+  :root.light{
+    --bg:#f6f7fb; --card:#ffffff; --accent:#0d6efd; --muted:#3c4958;
+    --correct:#1f7a1f; --wrong:#b02a37; --text:#111827;
+  }
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+  .top-logo{position:fixed;top:8px;right:12px;max-height:56px;z-index:9999;width:auto}
+  .wrap{max-width:980px;margin:28px auto;padding:16px;padding-top:10px}
+  header{display:flex;justify-content:flex-start;align-items:center;gap:8px;margin-bottom:12px;margin-right:160px}
+  h1{margin:0;font-size:1.25rem}
+  .card{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,0.45)}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .input{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);min-width:220px;background:transparent;color:var(--text)}
+  .btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
+  .ghost{background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--text);padding:8px 12px;border-radius:8px;cursor:pointer}
+  .q{display:flex;justify-content:space-between;gap:12px;padding:10px;border-radius:8px;margin-bottom:8px;background:rgba(255,255,255,0.02)}
+  .qtext{flex:1}
+  .choices{display:flex;gap:12px;align-items:center}
+  .correct{color:var(--correct);font-weight:600}
+  .wrong{color:var(--wrong);font-weight:600}
+  .results{margin-top:14px;padding:12px;border-radius:8px;background:rgba(0,0,0,0.12);color:var(--text)}
+  footer{text-align:center;margin-top:16px;color:var(--muted);font-size:0.95rem}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:8px}
+  .timer{font-weight:700;color:#fff;background:var(--accent);padding:6px 12px;border-radius:14px;margin-left:12px;transition:all 0.25s ease;box-shadow:0 4px 12px rgba(0,0,0,0.25)}
+  .timer.warning{background:#b02a37}
+  .timer.urgent{background:#b02a37;animation:pulse 1s infinite}
+  @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.06)}100%{transform:scale(1)}}
+  .small{font-size:0.9rem;color:var(--muted)}
+  @media(max-width:720px){ .choices{flex-wrap:wrap} .top-logo{max-height:44px} header{margin-right:100px} }
 </style>
 </head>
 <body>
-<!-- Logo pinned top-right -->
 <img class="top-logo" src="Tadokkico1.png" alt="Tadokkico logo" id="pageLogo">
-
 <div class="wrap">
-  <header><h1 id="pageTitle">Muscle Physiology — 100 True/False Quiz</h1></header>
-
+  <header><h1>Muscle Physiology — 100 True/False Quiz</h1></header>
   <div id="startCard" class="card">
     <div class="row">
-      <input id="studentName" class="input" placeholder="Full name (required)" />
-      <input id="studentEmail" class="input" placeholder="Email (required)" />
+      <input id="studentName" class="input" placeholder="Full name (required)"/>
+      <input id="studentEmail" class="input" placeholder="Email (required)"/>
       <button id="startBtn" class="btn">Start Quiz</button>
-      <button id="themeBtn" class="ghost" title="Toggle light/dark">🌙 Dark</button>
-      <button id="shuffleBtn" class="ghost" title="Shuffle questions">Shuffle</button>
+      <button id="themeBtn" class="ghost">🌙 Dark</button>
+      <button id="shuffleBtn" class="ghost">Shuffle</button>
     </div>
     <div style="margin-top:8px" class="small">30-minute timer starts when you click <strong>Start Quiz</strong>. Refresh to restart attempt.</div>
   </div>
-
   <div id="quizCard" class="card" style="display:none;margin-top:12px">
     <div style="display:flex;justify-content:space-between;align-items:center">
-      <div class="pageinfo small">
-        Page <span id="pageNum">1</span>/<span id="pageCount">10</span>
+      <div class="pageinfo small">Page <span id="pageNum">1</span>/<span id="pageCount">10</span>
         <span class="timer" id="timerDisplay"></span>
       </div>
       <div style="display:flex;gap:8px;align-items:center">
@@ -59,150 +63,124 @@ footer{text-align:center;margin-top:16px;color:var(--muted);font-size:0.95rem}
         <button id="nextBtn" class="ghost">Next ▶</button>
       </div>
     </div>
-
     <div id="quiz" style="max-height:560px;overflow:auto;padding-right:6px;margin-top:10px"></div>
-
-    <div class="nav">
-      <div class="small">Corrections shown on web after submit. Downloadable result contains only summary and focus areas.</div>
-      <div><button id="submitBtn" class="btn">Submit</button></div>
-    </div>
-
+    <div class="nav"><div class="small">Corrections shown on web only. PDF shows summary only.</div><div><button id="submitBtn" class="btn">Submit</button></div></div>
     <div id="results" class="results" style="display:none"></div>
-    <div style="display:flex;justify-content:flex-end;margin-top:10px;gap:8px">
-      <button id="exportBtn" class="btn" style="display:none">Download Result!</button>
-    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:10px;gap:8px"><button id="exportBtn" class="btn" style="display:none">Download Result!</button></div>
   </div>
-
   <footer>Powered by Tadokk</footer>
 </div>
 
-<!-- jsPDF for generating downloadable result -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
 
 <script>
 (() => {
-  // Put your deployed Apps Script URL here (you already gave it earlier)
   const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwcZ1H7uGtTIeySFGgMJIHAWppU0yqHe7ZoRUJElnMS2w36z5rZTFSQUDm7t918Bnbl/exec";
+  let studentName='', studentEmail='', answers=[], timerInterval=null, timeLeft=30*60;
+  const pageSize=10; let currentPage=0;
 
-  // State
-  let studentName = '';
-  let studentEmail = '';
-  let answers = [];
-  let timerInterval = null;
-  let timeLeft = 30 * 60; // 30 minutes
-  const pageSize = 10;
-  let currentPage = 0;
-
-  // 100 challenging True/False questions (no placeholders)
   const questions = [
-    {q:"A single skeletal muscle fiber can contract independently of other fibers in the same muscle.",a:true,topic:"Skeletal"},
-    {q:"Satellite cells are the primary drivers of adult skeletal muscle hyperplasia (increase in fiber number).",a:false,topic:"Skeletal"},
-    {q:"During lengthening (eccentric) contractions, more force is produced than during concentric contractions at the same activation.",a:true,topic:"Skeletal"},
-    {q:"Type I fibers have a higher maximal shortening velocity than Type IIx fibers.",a:false,topic:"Skeletal"},
-    {q:"The sarcoplasmic reticulum releases calcium through ryanodine receptors following depolarization.",a:true,topic:"Skeletal"},
-    {q:"Motor unit recruitment follows the size principle, with small units recruited before large ones.",a:true,topic:"Skeletal"},
-    {q:"Fused (complete) tetanus occurs in mammalian skeletal muscle under physiological conditions at normal body temperature.",a:false,topic:"Skeletal"},
-    {q:"Excitation–contraction coupling in skeletal muscle requires extracellular calcium entry through L-type channels to trigger SR release.",a:false,topic:"Skeletal"},
-    {q:"Muscle spindles primarily signal muscle stretch and contribute to the stretch reflex.",a:true,topic:"Skeletal"},
-    {q:"The rate of ATP hydrolysis by myosin ATPase is a major determinant of fiber contractile speed.",a:true,topic:"Skeletal"},
-
-    {q:"Cardiac myocytes are electrically coupled by gap junctions concentrated in intercalated discs.",a:true,topic:"Cardiac"},
-    {q:"Pacemaker potential in SA node cells depends mainly on fast voltage-gated Na+ channels.",a:false,topic:"Cardiac"},
-    {q:"Beta-adrenergic stimulation increases heart rate by increasing slope of phase 4 depolarization in pacemaker cells.",a:true,topic:"Cardiac"},
-    {q:"Cardiac muscle can undergo tetanic contractions during normal physiology.",a:false,topic:"Cardiac"},
-    {q:"Ischemic myocardium tends to rely more on anaerobic glycolysis compared to healthy myocardium.",a:true,topic:"Cardiac"},
-    {q:"Cardiac troponin I is a sensitive and specific marker of myocardial injury.",a:true,topic:"Cardiac"},
-    {q:"Cardiac action potential duration is shortened by increased extracellular potassium concentration.",a:true,topic:"Cardiac"},
-    {q:"The Frank–Starling mechanism describes increased stroke volume with increased preload due to sarcomere length–tension relationship.",a:true,topic:"Cardiac"},
-    {q:"Cardiac muscle contraction requires direct neural input for each heartbeat.",a:false,topic:"Cardiac"},
-    {q:"The AV node conducts impulses slower than the His-Purkinje system to allow ventricular filling.",a:true,topic:"Cardiac"},
-
-    {q:"Smooth muscle contraction often uses protein kinase C (PKC) pathways in addition to MLCK-mediated phosphorylation.",a:true,topic:"Smooth"},
-    {q:"Calmodulin functions in smooth muscle similarly to troponin C in skeletal muscle.",a:true,topic:"Smooth"},
-    {q:"Smooth muscle L-type Ca2+ channels are generally less important than SR release in most smooth muscle types.",a:false,topic:"Smooth"},
-    {q:"Phasic smooth muscles (e.g., GI tract) typically display slow waves and phasic contractions.",a:true,topic:"Smooth"},
-    {q:"Single-unit smooth muscle cells are electrically coupled and contract as a syncytium.",a:true,topic:"Smooth"},
-    {q:"Smooth muscle has a well-organized sarcomeric structure identical to skeletal muscle.",a:false,topic:"Smooth"},
-    {q:"In some smooth muscles, myosin light chain phosphatase activity is inhibited by Rho-kinase, increasing contraction.",a:true,topic:"Smooth"},
-    {q:"Reverse cross-bridge cycling is a common mechanism for smooth muscle relaxation.",a:false,topic:"Smooth"},
-    {q:"Smooth muscle cells can maintain force with low energy consumption via the latch state.",a:true,topic:"Smooth"},
-    {q:"Gap junctions are generally absent in multi-unit smooth muscle.",a:false,topic:"Smooth"},
-
-    {q:"Titin contributes to passive tension and may act as a molecular spring in sarcomeres.",a:true,topic:"Proteins"},
-    {q:"Nebulin precisely regulates thin filament length in skeletal muscle.",a:true,topic:"Proteins"},
-    {q:"Dystrophin links the cytoskeleton to the extracellular matrix via the dystrophin-glycoprotein complex.",a:true,topic:"Proteins"},
-    {q:"Troponin T binds calcium directly to initiate contraction.",a:false,topic:"Proteins"},
-    {q:"Mutations in the ryanodine receptor (RyR1) are implicated in malignant hyperthermia susceptibility.",a:true,topic:"Proteins"},
-    {q:"Myosin light-chain phosphorylation directly increases cross-bridge cycling rate in skeletal muscle.",a:false,topic:"Proteins"},
-    {q:"Actin's barbed end is the fast-growing end in filament polymerization.",a:true,topic:"Proteins"},
-    {q:"The M-line contains proteins that help anchor thick filaments in the sarcomere.",a:true,topic:"Proteins"},
-    {q:"Alpha-actinin is a major component of the Z-line in skeletal muscle.",a:true,topic:"Proteins"},
-    {q:"Calpain-mediated proteolysis targets structural proteins during muscle atrophy.",a:true,topic:"Proteins"},
-    {q:"Nebulin is abundant in cardiac muscle and determines sarcomere stability there.",a:false,topic:"Proteins"},
-    {q:"Cardiac titin isoforms are generally shorter and stiffer than skeletal titin isoforms.",a:true,topic:"Proteins"},
-    {q:"The cross-bridge cycle requires ATP binding for detachment of myosin from actin.",a:true,topic:"Proteins"},
-    {q:"Phospholamban inhibits SERCA when phosphorylated.",a:false,topic:"Proteins"},
-    {q:"Myosin heavy chain isoforms contribute to differences in contraction velocity.",a:true,topic:"Proteins"},
-    {q:"Proteins like obscurin have roles in sarcomere assembly and organization.",a:true,topic:"Proteins"},
-    {q:"Mutations in dystrophin lead to increased sarcolemmal fragility and calcium influx.",a:true,topic:"Proteins"},
-    {q:"Tropomyosin binds cooperatively along the actin filament and moves in response to Ca2+-troponin binding.",a:true,topic:"Proteins"},
-    {q:"Glycosylation is the primary post-translational modification regulating myosin ATPase activity.",a:false,topic:"Proteins"},
-    {q:"Desmin forms intermediate filament networks that maintain alignment of sarcomeres.",a:true,topic:"Proteins"},
-
-    {q:"Acetylcholine at the neuromuscular junction acts on nicotinic ionotropic receptors to depolarize the motor endplate.",a:true,topic:"NMJ"},
-    {q:"Motor end plate potentials are typically below threshold and do not trigger action potentials.",a:false,topic:"NMJ"},
-    {q:"Botulinum toxin cleaves SNARE proteins and prevents synaptic vesicle release.",a:true,topic:"NMJ"},
-    {q:"Myasthenia gravis is commonly associated with antibodies to nicotinic ACh receptors.",a:true,topic:"NMJ"},
-    {q:"Lambert-Eaton myasthenic syndrome involves presynaptic autoantibodies against voltage-gated calcium channels.",a:true,topic:"NMJ"},
-    {q:"The safety factor at the NMJ ensures that normal ACh release reliably triggers muscle APs.",a:true,topic:"NMJ"},
-    {q:"Acetylcholinesterase inhibitors would worsen myasthenia gravis symptoms.",a:false,topic:"NMJ"},
-    {q:"Quantal release refers to the fixed-size packets of neurotransmitter released by vesicles.",a:true,topic:"NMJ"},
-    {q:"Denervation hypersensitivity results from upregulation of postsynaptic ACh receptors across the membrane.",a:true,topic:"NMJ"},
-    {q:"Excitation-contraction coupling can occur without an action potential at the motor endplate.",a:false,topic:"NMJ"},
-
-    {q:"In skeletal muscle, DHP receptors (L-type Ca2+ channels) act as voltage sensors that directly trigger RyR opening.",a:true,topic:"EC"},
-    {q:"In cardiac muscle, Ca2+ influx through L-type channels triggers RyR-mediated Ca2+ release (CICR).",a:true,topic:"EC"},
-    {q:"SERCA activity is increased by phospholamban phosphorylation.",a:true,topic:"EC"},
-    {q:"Ryanodine receptor dysfunction can lead to uncontrolled Ca2+ leak and muscle pathology.",a:true,topic:"EC"},
-    {q:"Sodium-calcium exchanger (NCX) contributes to Ca2+ extrusion in cardiac myocytes.",a:true,topic:"EC"},
-    {q:"T-tubules are absent in cardiac muscle but present in skeletal muscle.",a:false,topic:"EC"},
-    {q:"Phase 0 of the cardiac action potential is primarily due to Na+ influx in ventricular myocytes.",a:true,topic:"EC"},
-    {q:"The plateau phase (phase 2) in cardiac AP is largely due to balance between inward Ca2+ and outward K+ currents.",a:true,topic:"EC"},
-    {q:"A prolonged QT interval reflects extended ventricular repolarization and predisposes to torsades.",a:true,topic:"EC"},
-    {q:"RyR2 is the predominant ryanodine receptor isoform in cardiac muscle.",a:true,topic:"EC"},
-    {q:"Local control theory describes how small Ca2+ entry units trigger local RyR release in cardiac cells.",a:true,topic:"EC"},
-    {q:"Calsequestrin serves as a Ca2+ buffer within the sarcoplasmic reticulum.",a:true,topic:"EC"},
-
-    {q:"Oxidative phosphorylation yields far more ATP per molecule of glucose than anaerobic glycolysis.",a:true,topic:"Energy"},
-    {q:"During high-intensity short-duration exercise, phosphocreatine provides the fastest ATP regeneration.",a:true,topic:"Energy"},
-    {q:"Fatty acid oxidation is the dominant fuel for very high-intensity sprinting.",a:false,topic:"Energy"},
-    {q:"Endurance training increases mitochondrial biogenesis and oxidative enzyme capacity.",a:true,topic:"Energy"},
-    {q:"Glycogen depletion is a limiting factor for prolonged high-intensity exercise.",a:true,topic:"Energy"},
-    {q:"Lactate accumulation always indicates oxygen deficit and muscle damage.",a:false,topic:"Energy"},
-    {q:"AMP-activated protein kinase (AMPK) activation promotes catabolic pathways during energy stress.",a:true,topic:"Energy"},
-    {q:"Creatine kinase reaction is near equilibrium under most physiological conditions.",a:true,topic:"Energy"},
-    {q:"Oxidation of ketone bodies in muscle requires peroxisomal enzymes.",a:false,topic:"Energy"},
-    {q:"Aerobic capacity (VO2 max) is limited partly by oxygen delivery and mitochondrial function.",a:true,topic:"Energy"},
-
-    {q:"Duchenne muscular dystrophy is caused by mutations that disrupt the dystrophin reading frame.",a:true,topic:"Diseases"},
-    {q:"Becker muscular dystrophy is typically less severe due to partially functional dystrophin.",a:true,topic:"Diseases"},
-    {q:"Rhabdomyolysis can lead to hyperkalemia and acute kidney injury.",a:true,topic:"Diseases"},
-    {q:"Polymyositis is characterized by antibody-mediated membrane attack complex deposition only.",a:false,topic:"Diseases"},
-    {q:"Statin-induced myopathy is always accompanied by elevated CK levels.",a:false,topic:"Diseases"},
-    {q:"Malignant hyperthermia involves uncontrolled Ca2+ release from the SR, often triggered by volatile anesthetics.",a:true,topic:"Diseases"},
-    {q:"Botulism results in flaccid paralysis by blocking presynaptic ACh release.",a:true,topic:"Diseases"},
-    {q:"Peripheral neuropathies primarily affect muscle structure directly.",a:false,topic:"Diseases"},
-    {q:"Myotonic dystrophy features myotonia due to altered ion channel function.",a:true,topic:"Diseases"},
-    {q:"Electrolyte disturbances, such as hypokalemia, can cause muscle weakness.",a:true,topic:"Diseases"},
-
-    {q:"Low extracellular calcium increases neuronal and muscle excitability by reducing surface charge screening.",a:true,topic:"Ions"},
-    {q:"Hyperkalemia raises resting membrane potential making cells less excitable.",a:false,topic:"Ions"},
-    {q:"Sodium-potassium ATPase helps maintain resting membrane potential by moving 3 Na+ out for 2 K+ in.",a:true,topic:"Ions"},
-    {q:"The sarcolemma and T-tubule membrane are continuous and share ion channels.",a:true,topic:"Structure"},
-    {q:"Passive elastic recoil in muscle is mediated largely by titin protein.",a:true,topic:"Structure"},
-    {q:"Muscle fiber cross-sectional area correlates more strongly with force than fiber length.",a:true,topic:"Structure"},
-    {q:"Capillary density decreases with endurance training.",a:false,topic:"Structure"},
-    {q:"Mitochondrial dysfunction may contribute to muscle fatigue and weakness.",a:true,topic:"Structure"}
+{q:"Each skeletal muscle fiber is multinucleated, with nuclei located at the cell periphery.",a:true,topic:"Skeletal"},
+{q:"Satellite cells drive muscle repair but do not directly contract.",a:true,topic:"Skeletal"},
+{q:"Slow-twitch fibers (Type I) have more mitochondria than fast-twitch fibers.",a:true,topic:"Skeletal"},
+{q:"Type IIx fibers fatigue more rapidly than Type IIa fibers.",a:true,topic:"Skeletal"},
+{q:"Isometric contractions involve change in muscle length without change in tension.",a:false,topic:"Skeletal"},
+{q:"In concentric contraction, the muscle shortens while generating force.",a:true,topic:"Skeletal"},
+{q:"The length–tension relationship shows maximal force at optimal sarcomere length.",a:true,topic:"Skeletal"},
+{q:"Muscle hypertrophy is mainly due to increase in fiber size, not number.",a:true,topic:"Skeletal"},
+{q:"The “all-or-none” principle applies to entire muscles, not individual fibers.",a:false,topic:"Skeletal"},
+{q:"Complete tetanus occurs when stimuli arrive so rapidly that relaxation is impossible.",a:true,topic:"Skeletal"},
+{q:"The force–velocity curve shows greater load decreases contraction velocity.",a:true,topic:"Skeletal"},
+{q:"Myoglobin content is higher in slow oxidative fibers.",a:true,topic:"Skeletal"},
+{q:"Creatine phosphate is the first energy store tapped during rapid contraction.",a:true,topic:"Skeletal"},
+{q:"Muscle tone results from partial activation of motor units at rest.",a:true,topic:"Skeletal"},
+{q:"Muscle spindles detect changes in length and speed of stretch.",a:true,topic:"Skeletal"},
+{q:"Golgi tendon organs monitor muscle tension and prevent overloading.",a:true,topic:"Skeletal"},
+{q:"Recruitment of motor units follows the size principle.",a:true,topic:"Skeletal"},
+{q:"Cross-bridge cycling requires ATP binding for detachment.",a:true,topic:"Skeletal"},
+{q:"Rigor mortis occurs because ATP is absent, preventing cross-bridge detachment.",a:true,topic:"Skeletal"},
+{q:"Excitation–contraction coupling in skeletal muscle depends on extracellular calcium entry.",a:false,topic:"Skeletal"},
+{q:"Cardiac muscle fibers are branched and connected by intercalated discs.",a:true,topic:"Cardiac"},
+{q:"Gap junctions allow rapid spread of action potentials in cardiac muscle.",a:true,topic:"Cardiac"},
+{q:"Pacemaker potential is primarily due to “funny” Na⁺ currents (If).",a:true,topic:"Cardiac"},
+{q:"Phase 0 of the ventricular action potential is mediated by fast Na⁺ channels.",a:true,topic:"Cardiac"},
+{q:"The plateau phase is sustained by L-type calcium channel influx.",a:true,topic:"Cardiac"},
+{q:"Cardiac muscle can undergo tetanus due to long refractory period.",a:false,topic:"Cardiac"},
+{q:"The Frank–Starling law relates end-diastolic volume to stroke volume.",a:true,topic:"Cardiac"},
+{q:"Beta-adrenergic stimulation increases heart rate and contractility.",a:true,topic:"Cardiac"},
+{q:"The AV node slows conduction to permit ventricular filling.",a:true,topic:"Cardiac"},
+{q:"Ischemia forces cardiac muscle to rely more on anaerobic glycolysis.",a:true,topic:"Cardiac"},
+{q:"Cardiac troponin is a clinical marker of myocardial injury.",a:true,topic:"Cardiac"},
+{q:"Potassium efflux contributes to repolarization of cardiac myocytes.",a:true,topic:"Cardiac"},
+{q:"Excess extracellular K⁺ can increase cardiac excitability.",a:false,topic:"Cardiac"},
+{q:"The Purkinje system conducts impulses faster than the AV node.",a:true,topic:"Cardiac"},
+{q:"Conduction velocity is lowest at the AV node.",a:true,topic:"Cardiac"},
+{q:"Sympathetic stimulation increases slope of pacemaker depolarization.",a:true,topic:"Cardiac"},
+{q:"Cardiac muscle contraction is calcium-dependent via Ca²⁺-induced Ca²⁺ release.",a:true,topic:"Cardiac"},
+{q:"Ventricular fibrillation maintains cardiac output due to uncoordinated contractions.",a:false,topic:"Cardiac"},
+{q:"Calcium channel blockers reduce contractility by decreasing calcium influx.",a:true,topic:"Cardiac"},
+{q:"Unlike skeletal muscle, cardiac excitation–contraction coupling requires extracellular calcium.",a:true,topic:"Cardiac"},
+{q:"Smooth muscle lacks sarcomeres but contains actin and myosin filaments.",a:true,topic:"Smooth"},
+{q:"Dense bodies in smooth muscle act like Z-discs in skeletal muscle.",a:true,topic:"Smooth"},
+{q:"Contraction in smooth muscle is regulated by MLCK and Ca²⁺-calmodulin.",a:true,topic:"Smooth"},
+{q:"Troponin is absent in smooth muscle.",a:true,topic:"Smooth"},
+{q:"Smooth muscle can maintain tone with minimal ATP use via latch state.",a:true,topic:"Smooth"},
+{q:"Single-unit smooth muscle is electrically coupled via gap junctions.",a:true,topic:"Smooth"},
+{q:"Multi-unit smooth muscle fibers contract independently.",a:true,topic:"Smooth"},
+{q:"Rho-kinase increases contraction by inhibiting myosin light-chain phosphatase.",a:true,topic:"Smooth"},
+{q:"Smooth muscle contracts more quickly but fatigues faster than skeletal muscle.",a:false,topic:"Smooth"},
+{q:"Hormones such as oxytocin can regulate smooth muscle tone.",a:true,topic:"Smooth"},
+{q:"Nitric oxide relaxes smooth muscle by increasing cGMP.",a:true,topic:"Smooth"},
+{q:"Smooth muscle contraction depends partly on extracellular calcium entry.",a:true,topic:"Smooth"},
+{q:"Peristalsis is mediated by coordinated smooth muscle contraction.",a:true,topic:"Smooth"},
+{q:"Adrenergic stimulation always relaxes smooth muscle regardless of receptor subtype.",a:false,topic:"Smooth"},
+{q:"Smooth muscle can undergo hypertrophy and hyperplasia.",a:true,topic:"Smooth"},
+{q:"Calcium sparks from the sarcoplasmic reticulum regulate local contraction.",a:true,topic:"Smooth"},
+{q:"Pharmacomechanical coupling in smooth muscle does not require action potentials.",a:true,topic:"Smooth"},
+{q:"Myosin light chain phosphorylation is essential for initiating contraction.",a:true,topic:"Smooth"},
+{q:"Gap junctions facilitate coordinated contraction in visceral smooth muscle.",a:true,topic:"Smooth"},
+{q:"Some smooth muscles exhibit pacemaker activity.",a:true,topic:"Smooth"},
+{q:"At the neuromuscular junction, acetylcholine binds nicotinic receptors.",a:true,topic:"NMJ"},
+{q:"End-plate potentials are usually sufficient to trigger action potentials.",a:true,topic:"NMJ"},
+{q:"Botulinum toxin prevents ACh release by cleaving SNARE proteins.",a:true,topic:"NMJ"},
+{q:"Myasthenia gravis involves antibodies against postsynaptic ACh receptors.",a:true,topic:"NMJ"},
+{q:"Lambert-Eaton syndrome involves antibodies against presynaptic calcium channels.",a:true,topic:"NMJ"},
+{q:"Acetylcholinesterase rapidly breaks down ACh in the synaptic cleft.",a:true,topic:"NMJ"},
+{q:"Denervation hypersensitivity increases extrajunctional receptors.",a:true,topic:"NMJ"},
+{q:"Curare blocks nicotinic receptors, preventing depolarization.",a:true,topic:"NMJ"},
+{q:"Succinylcholine causes depolarizing neuromuscular blockade.",a:true,topic:"NMJ"},
+{q:"Quantal release refers to vesicles releasing fixed amounts of ACh.",a:true,topic:"NMJ"},
+{q:"Skeletal muscle action potentials rely on sodium influx.",a:true,topic:"NMJ"},
+{q:"The DHP receptor in skeletal muscle acts as a voltage sensor.",a:true,topic:"EC"},
+{q:"Calcium release from the sarcoplasmic reticulum occurs via RyR channels.",a:true,topic:"EC"},
+{q:"SERCA pumps resequester calcium into the SR.",a:true,topic:"EC"},
+{q:"Phospholamban regulates SERCA activity in cardiac muscle.",a:true,topic:"EC"},
+{q:"CICR is the dominant coupling mechanism in cardiac muscle.",a:true,topic:"EC"},
+{q:"RyR leak can cause muscle weakness.",a:true,topic:"EC"},
+{q:"T-tubules ensure synchronous activation of muscle fibers.",a:true,topic:"EC"},
+{q:"The plateau of cardiac AP is due to balance between Ca²⁺ influx and K⁺ efflux.",a:true,topic:"EC"},
+{q:"Na⁺/Ca²⁺ exchanger helps remove calcium from cardiac cells.",a:true,topic:"EC"},
+{q:"Oxidative phosphorylation yields ~36 ATP per glucose.",a:true,topic:"Energy"},
+{q:"Anaerobic glycolysis yields only 2 ATP per glucose.",a:true,topic:"Energy"},
+{q:"Phosphocreatine provides rapid ATP regeneration.",a:true,topic:"Energy"},
+{q:"Fatigue during prolonged activity is linked to glycogen depletion.",a:true,topic:"Energy"},
+{q:"Lactate can be converted back to glucose in the liver.",a:true,topic:"Energy"},
+{q:"Endurance training increases mitochondrial density.",a:true,topic:"Energy"},
+{q:"Sprint performance relies primarily on anaerobic glycolysis.",a:true,topic:"Energy"},
+{q:"Fatty acids are the major fuel during prolonged submaximal exercise.",a:true,topic:"Energy"},
+{q:"AMPK activation promotes energy conservation.",a:true,topic:"Energy"},
+{q:"VO₂max depends on both delivery and utilization of oxygen.",a:true,topic:"Energy"},
+{q:"Duchenne muscular dystrophy is due to dystrophin gene mutation.",a:true,topic:"Disease"},
+{q:"Becker muscular dystrophy is milder due to partially functional dystrophin.",a:true,topic:"Disease"},
+{q:"Rhabdomyolysis releases myoglobin that can damage kidneys.",a:true,topic:"Disease"},
+{q:"Malignant hyperthermia involves uncontrolled SR Ca²⁺ release.",a:true,topic:"Disease"},
+{q:"Statins can cause myopathy in some patients.",a:true,topic:"Disease"},
+{q:"Myotonic dystrophy involves delayed relaxation due to ion channel defects.",a:true,topic:"Disease"},
+{q:"Botulism causes flaccid paralysis.",a:true,topic:"Disease"},
+{q:"Hypokalemia can cause muscle weakness.",a:true,topic:"Disease"},
+{q:"Hyperkalemia can impair cardiac muscle function.",a:true,topic:"Disease"},
+{q:"Polymyositis is an inflammatory myopathy mediated by immune cells.",a:true,topic:"Disease"}
   ];
 
   // DOM refs
@@ -224,12 +202,18 @@ footer{text-align:center;margin-top:16px;color:var(--muted);font-size:0.95rem}
 
   pageCountSpan.textContent = Math.ceil(questions.length / pageSize);
 
-  // helpers
   function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-  function sanitizeFilename(n){ return (n||'student').replace(/[^a-z0-9_-]/ig,'_').slice(0,40); }
+  function sanitizeFilename(n){ return (n||'student').replace(/[^a-z0-9_\-]/ig,'_').slice(0,40); }
 
-  // render page
-  function renderPage(page=0){
+  function shuffleArray(arr){
+    for (let i = arr.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function renderPage(page = 0){
     quizDiv.innerHTML = '';
     const start = page * pageSize;
     const slice = questions.slice(start, start + pageSize);
@@ -245,17 +229,14 @@ footer{text-align:center;margin-top:16px;color:var(--muted);font-size:0.95rem}
         </div>
       `;
       quizDiv.appendChild(div);
-      div.querySelectorAll('input[type=radio]').forEach(r=>r.addEventListener('change', e=>{
-        answers[index] = e.target.value;
-      }));
+      div.querySelectorAll('input[type=radio]').forEach(r=>r.addEventListener('change', e=>{ answers[index] = e.target.value; }));
     });
     prevBtn.disabled = page === 0;
-    nextBtn.disabled = page === Math.ceil(questions.length/pageSize) - 1;
+    nextBtn.disabled = page === Math.ceil(questions.length / pageSize) - 1;
     pageNumSpan.textContent = page + 1;
     quizDiv.scrollTop = 0;
   }
 
-  // timer
   function startTimer(){
     clearInterval(timerInterval);
     timeLeft = 30 * 60;
@@ -263,37 +244,41 @@ footer{text-align:center;margin-top:16px;color:var(--muted);font-size:0.95rem}
     timerInterval = setInterval(()=>{
       timeLeft--;
       updateTimer();
-      if (timeLeft <= 0){ clearInterval(timerInterval); autoSubmit(); }
+      if (timeLeft <= 0){ clearInterval(timerInterval); submitQuiz(true); }
     },1000);
   }
+
   function updateTimer(){
     const mm = String(Math.floor(timeLeft/60)).padStart(2,'0');
     const ss = String(timeLeft%60).padStart(2,'0');
-    timerDisplay.textContent = ` ⏱ ${mm}:${ss}`;
+    timerDisplay.textContent = `⏱ ${mm}:${ss}`;
+    timerDisplay.classList.remove('warning','urgent');
+    if (timeLeft <= 300) timerDisplay.classList.add('warning');
+    if (timeLeft <= 60) timerDisplay.classList.add('urgent');
   }
-  function autoSubmit(){ submitQuiz(true); }
 
-  // start quiz
   startBtn.addEventListener('click', ()=>{
-    const name = (document.getElementById('studentName').value||'').trim();
-    const email = (document.getElementById('studentEmail').value||'').trim();
+    const name = (document.getElementById('studentName').value || '').trim();
+    const email = (document.getElementById('studentEmail').value || '').trim();
     if (!name){ alert('Please enter your full name'); return; }
-    if (!email || !email.includes('@')){ alert('Please enter a valid email address'); return; }
+    if (!email || !email.includes('@')){ alert('Please enter a valid email'); return; }
     studentName = name; studentEmail = email;
     answers = Array(questions.length).fill(null);
-    // shuffle questions before presenting
-    for (let i = questions.length -1; i>0; i--){ const j = Math.floor(Math.random()*(i+1)); [questions[i],questions[j]]=[questions[j],questions[i]]; }
+    shuffleArray(questions);
     startCard.style.display = 'none'; quizCard.style.display = 'block'; currentPage = 0; renderPage(currentPage);
     resultsDiv.style.display = 'none'; exportBtn.style.display = 'none';
     startTimer();
   });
 
-  prevBtn.addEventListener('click', ()=>{ if (currentPage>0){ currentPage--; renderPage(currentPage); } });
+  prevBtn.addEventListener('click', ()=>{ if (currentPage > 0){ currentPage--; renderPage(currentPage); } });
   nextBtn.addEventListener('click', ()=>{ if (currentPage < Math.ceil(questions.length/pageSize)-1){ currentPage++; renderPage(currentPage); } });
 
   shuffleBtn.addEventListener('click', ()=>{
-    for (let i = questions.length -1; i>0; i--){ const j = Math.floor(Math.random()*(i+1)); [questions[i],questions[j]]=[questions[j],questions[i]]; }
-    answers = Array(questions.length).fill(null); currentPage = 0; renderPage(currentPage); resultsDiv.style.display='none'; exportBtn.style.display='none';
+    shuffleArray(questions);
+    answers = Array(questions.length).fill(null);
+    currentPage = 0;
+    renderPage(currentPage);
+    resultsDiv.style.display = 'none'; exportBtn.style.display = 'none';
   });
 
   themeBtn.addEventListener('click', ()=>{
@@ -301,7 +286,6 @@ footer{text-align:center;margin-top:16px;color:var(--muted);font-size:0.95rem}
     themeBtn.textContent = document.documentElement.classList.contains('light') ? '☀️ Light' : '🌙 Dark';
   });
 
-  // scoring + result display
   function submitQuiz(isAuto=false){
     clearInterval(timerInterval);
     const feedback=[]; let correct=0; const topicStats={};
@@ -316,39 +300,34 @@ footer{text-align:center;margin-top:16px;color:var(--muted);font-size:0.95rem}
       feedback.push({i, q: questions[i].q, given, expected, isCorrect});
     }
     const percent = Math.round((correct/questions.length)*100);
-    const focusAreas = Object.entries(topicStats).map(([t,v])=>({topic:t,missed:v.wrong,total:v.total})).filter(x=>x.missed>0).sort((a,b)=>b.missed-a.missed);
-
+    let focusAreas = Object.entries(topicStats).map(([t,v])=>({topic:t,missed:v.wrong,total:v.total})).filter(x=>x.missed>0);
+    focusAreas.sort((a,b)=> a.missed - b.missed );
     let html = `<h3>Results — ${escapeHtml(studentName)}</h3>`;
     html += `<p><strong>Email:</strong> ${escapeHtml(studentEmail)}</p>`;
     html += `<p><strong>Score:</strong> ${correct} / ${questions.length} (${percent}%)</p>`;
-    if (focusAreas.length===0) html += `<p>Excellent — no topic misses detected.</p>`;
-    else { html += `<p><strong>Focus areas:</strong></p><ul>`; focusAreas.forEach(f=> html += `<li>${escapeHtml(f.topic)} — missed ${f.missed} / ${f.total}</li>`); html += `</ul>`; }
+    if (focusAreas.length === 0) html += `<p>Excellent — no topic misses detected.</p>`;
+    else { html += `<p><strong>Focus areas (weaker topics shown last):</strong></p><ul>`; focusAreas.forEach(f=> html += `<li>${escapeHtml(f.topic)} — missed ${f.missed} / ${f.total}</li>`); html += `</ul>`; }
     html += `<h4>Corrections (web only)</h4>`;
     feedback.forEach(f=> html += `<div class="${f.isCorrect?'correct':'wrong'}">Q${f.i+1}. ${escapeHtml(f.q)}<br>Your: ${f.given||'No answer'} | Correct: ${f.expected}</div>`);
-
     resultsDiv.innerHTML = html; resultsDiv.style.display = 'block'; exportBtn.style.display = 'inline-block';
     window.__tadokk_last_report = { name: studentName, email: studentEmail, score: correct, total: questions.length, percent, focusAreas };
-
-    // send to google sheets and auto-download
     try{ sendToSheets(window.__tadokk_last_report); }catch(e){ console.warn('Sheets send error', e); }
-    try{ generateAndDownloadReport(window.__tadokk_last_report); }catch(e){ console.error('Auto-download failed', e); }
+    setTimeout(()=>{ try{ generateAndDownloadReport(window.__tadokk_last_report); }catch(e){ console.error('Auto-download failed', e); } }, 600);
     if (!isAuto) resultsDiv.scrollIntoView({behavior:'smooth'});
   }
 
   submitBtn.addEventListener('click', ()=> submitQuiz(false));
 
-  // send to Google Sheets (best-effort)
   function sendToSheets(report){
     const payload = { name: report.name, email: report.email, score: report.score, percent: report.percent, focusAreas: (report.focusAreas||[]).map(f=>f.topic||f) };
-    fetch(SHEET_WEBAPP_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
-      .then(r=> r.text().then(t=> console.log('Sheets response', r.status, t)) )
-      .catch(err=>{
-        console.warn('Sheets send failed, fallback no-cors', err);
-        try{ fetch(SHEET_WEBAPP_URL, { method:'POST', mode:'no-cors', body: JSON.stringify(payload) }); }catch(e){}
-      });
+    fetch(SHEET_WEBAPP_URL, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    }).then(r=> r.text().then(t=> console.log('Sheets response', r.status, t)) )
+      .catch(err=>{ console.warn('Sheets send failed, fallback no-cors', err); try{ fetch(SHEET_WEBAPP_URL, { method:'POST', mode:'no-cors', body: JSON.stringify(payload) }); }catch(e){} });
   }
 
-  // IMAGE -> DATA URL (draws pageLogo onto canvas to embed)
   function imageElementToDataUrl(imgEl){
     return new Promise((resolve)=>{
       try {
@@ -357,93 +336,73 @@ footer{text-align:center;margin-top:16px;color:var(--muted);font-size:0.95rem}
         img.onload = () => {
           try {
             const c = document.createElement('canvas');
-            c.width = img.width;
-            c.height = img.height;
+            c.width = img.naturalWidth;
+            c.height = img.naturalHeight;
             const ctx = c.getContext('2d');
             ctx.drawImage(img,0,0);
-            const data = c.toDataURL('image/png');
-            resolve(data);
+            resolve(c.toDataURL('image/png'));
           } catch(e) { console.warn('Canvas draw failed', e); resolve(null); }
         };
         img.onerror = ()=> { console.warn('Could not load image for embedding'); resolve(null); };
-        // try source from existing element to avoid re-requesting; fallback to its src
-        const existing = document.getElementById('pageLogo');
-        img.src = existing && existing.src ? existing.src : 'Tadokkico1.png';
+        img.src = imgEl.src || 'Tadokkico1.png';
       } catch(e){ console.warn('imageElementToDataUrl error', e); resolve(null); }
     });
   }
 
-  // generate and download result file (PDF)
   async function generateAndDownloadReport(r){
-    // wait for jsPDF to be available
-    if (!window.jspdf) { console.warn('jsPDF not loaded'); }
-    const { jsPDF } = window.jspdf || {};
-    const doc = new (jsPDF || function(){return {save:()=>{alert('Cannot create file: jsPDF not loaded')}}})();
-    if (!jsPDF) {
-      // not loaded properly — fallback: create a simple text file with summary
-      const text = `Name: ${r.name}\nEmail: ${r.email}\nScore: ${r.score}/${r.total} (${r.percent}%)\nFocus areas: ${r.focusAreas.map(f=>f.topic).join('; ')}`;
-      const blob = new Blob([text], {type:'text/plain'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = `Tadokk_QuizReport_${sanitizeFilename(r.name)}.txt`;
-      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-      return;
-    }
-
-    const pdf = new jsPDF({unit:'pt',format:'a4'});
-    const brand = [72,176,191];
-    pdf.setFontSize(18); pdf.setTextColor(...brand);
-    pdf.text('Muscle Physiology Quiz Report',40,60);
-    pdf.setFontSize(11); pdf.setTextColor(0,0,0);
-    pdf.text(`Name: ${r.name}`,40,86);
-    pdf.text(`Email: ${r.email}`,40,104);
-    pdf.text(`Date: ${new Date().toLocaleString()}`,40,122);
-    pdf.text(`Score: ${r.score} / ${r.total} (${r.percent}%)`,40,140);
-    let y = 162;
-    if (!r.focusAreas || r.focusAreas.length === 0) {
-      pdf.text('Focus Areas: None — excellent performance.',40,y); y += 18;
-    } else {
-      pdf.setFontSize(12); pdf.text('Focus Areas (topics):',40,y); y += 16; pdf.setFontSize(11);
-      r.focusAreas.forEach((f, idx) => {
-        const line = `${idx+1}. ${f.topic} — missed ${f.missed} / ${f.total}`;
-        const parts = pdf.splitTextToSize(line, pdf.internal.pageSize.getWidth() - 80);
-        pdf.text(parts,46,y);
-        y += parts.length * 14;
-        if (y > pdf.internal.pageSize.getHeight() - 140){ pdf.addPage(); y = 60; }
+    if (!window.jspdf){ console.warn('jsPDF not loaded'); return; }
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({unit:'pt',format:'a4'});
+    const brand = [0,86,179];
+    doc.setFontSize(18); doc.setTextColor(...brand);
+    doc.text('Muscle Physiology Quiz Report',40,60);
+    doc.setFontSize(11); doc.setTextColor(0,0,0);
+    doc.text(`Name: ${r.name}`,40,86);
+    doc.text(`Email: ${r.email}`,40,104);
+    doc.text(`Date: ${new Date().toLocaleString()}`,40,122);
+    doc.text(`Score: ${r.score} / ${r.total} (${r.percent}%)`,40,140);
+    const tableData = (r.focusAreas || []).map(f => [f.topic, `${f.total}`, `${f.missed}`, `${f.total - f.missed}`]);
+    let startY = 162;
+    if (tableData.length > 0) {
+      doc.autoTable({
+        startY,
+        head: [['Topic','Total Questions','Wrong','Correct']],
+        body: tableData,
+        theme: 'striped',
+        styles: { fontSize: 10 },
+        headStyles: { fillColor: brand, textColor: 255, halign: 'center' },
+        alternateRowStyles: { fillColor: [230, 245, 255] },
+        columnStyles: { 0: { cellWidth: 240 }, 1: { halign: 'center' }, 2: { halign: 'center' }, 3: { halign: 'center' } }
       });
+      startY = doc.lastAutoTable.finalY + 10;
+    } else {
+      doc.text('Focus Areas: None — excellent performance.', 40, startY);
     }
-
-    // embed logo (drawn via canvas to get dataURL)
     const imgData = await imageElementToDataUrl(document.getElementById('pageLogo'));
-    const pageW = pdf.internal.pageSize.getWidth();
-    const pageH = pdf.internal.pageSize.getHeight();
-    const logoW = 100;
-    const logoH = 100 * 0.4;
-    const pages = pdf.getNumberOfPages();
-    for (let p = 1; p <= pages; p++) {
-      pdf.setPage(p);
-      if (imgData) {
-        try { pdf.addImage(imgData, 'PNG', pageW - logoW - 40, 30, logoW, logoH); } catch(e) { console.warn('addImage failed', e); }
-      }
-      pdf.setDrawColor(...brand); pdf.setLineWidth(0.6); pdf.line(40, pageH - 80, pageW - 40, pageH - 80);
-      pdf.setFontSize(10); pdf.setTextColor(0,0,0); pdf.text('Powered by Tadokk', 40, pageH - 60);
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const logoW = 150;
+    let logoH = 50;
+    if (imgData){
+      const tmp = new Image();
+      tmp.src = imgData;
+      await new Promise((res)=>{ tmp.onload = res; tmp.onerror = res; });
+      const ar = (tmp.naturalHeight && tmp.naturalWidth) ? (tmp.naturalHeight / tmp.naturalWidth) : 0.4;
+      logoH = Math.max(30, Math.round(logoW * ar));
+      try{ doc.addImage(imgData, 'PNG', pageW - logoW - 40, 30, logoW, logoH); }catch(e){ console.warn('addImage failed', e); }
     }
-
+    doc.setDrawColor(...brand); doc.setLineWidth(0.6);
+    doc.line(40, pageH - 80, pageW - 40, pageH - 80);
+    doc.setFontSize(10); doc.setTextColor(0,0,0);
+    doc.text('Powered by Tadokk', 40, pageH - 60);
     const filename = `Tadokk_QuizReport_${sanitizeFilename(r.name)}_${(new Date()).toISOString().slice(0,19).replace(/[:T]/g,'-')}.pdf`;
-    pdf.save(filename);
+    doc.save(filename);
   }
 
-  // backup export button (re-download)
-  exportBtn.addEventListener('click', ()=> {
-    const r = window.__tadokk_last_report;
-    if (!r) return alert('Submit first to download your result.');
-    generateAndDownloadReport(r);
-  });
+  exportBtn.addEventListener('click', ()=> { const r = window.__tadokk_last_report; if (!r) return alert('Submit first to download your result.'); generateAndDownloadReport(r); });
 
-  // initial render
   renderPage(0);
-
-})();
+})(); 
 </script>
 </body>
 </html>
