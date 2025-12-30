@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
     <style>
         :root {
             --primary: #6366f1;
@@ -23,7 +22,6 @@
             --overlay: rgba(0,0,0,.1);
             --social-color: var(--text);
         }
-
         [data-theme="dark"] {
             --bg: #050810;
             --text: #f1f5f9;
@@ -33,7 +31,6 @@
             --overlay: rgba(0,0,0,.8);
             --social-color: #f1f5f9;
         }
-
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
         body { background:var(--bg); color:var(--text); transition:.4s; overflow-x:hidden; }
         header { position:fixed; top:0; width:100%; z-index:1000; background:var(--nav-glass); backdrop-filter:blur(15px); border-bottom:1px solid var(--border); }
@@ -43,7 +40,6 @@
         .logo-box { display:flex; align-items:center; gap:12px; }
         .logo-box img { height:42px; border-radius:8px; }
         .logo-box span { font-weight:800; font-size:1.5rem; letter-spacing:-1px; color:var(--text); }
-
         .side-nav { position:fixed; top:0; right:-450px; width:380px; height:100vh; background:var(--card-bg); z-index:1050; padding:40px; display:flex; flex-direction:column; transition:.6s cubic-bezier(.85,0,.15,1); border-left:1px solid var(--border); box-shadow:-20px 0 50px rgba(0,0,0,.5); }
         .side-nav.open { right:0; }
         .nav-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:50px; }
@@ -55,20 +51,56 @@
         #body-overlay { position:fixed; inset:0; background:var(--overlay); backdrop-filter:blur(8px); z-index:1040; opacity:0; pointer-events:none; transition:.4s; }
         #body-overlay.active { opacity:1; pointer-events:auto; }
 
-        /* Architectural Portfolio Gallery - Fixed for mobile */
-        .gallery-container { display:flex; gap:15px; width:100%; height:500px; margin-top:50px; }
-        .gallery-slide { flex:1; height:100%; border-radius:30px; background-size:cover; background-position:center; transition:all .8s cubic-bezier(.25,1,.5,1); position:relative; overflow:hidden; filter:saturate(.5); border:1px solid var(--border); }
-        .gallery-slide .caption { position:absolute; bottom:30px; left:30px; opacity:0; transition:all .45s; transform:translateY(20px); background:rgba(0,0,0,.65); backdrop-filter:blur(8px); padding:14px 20px; border-radius:14px; color:#fff; mix-blend-mode:difference; isolation:isolate; pointer-events:none; }
-
-        /* Hover effect only on devices that support hover (desktop) */
-        @media (hover: hover) and (pointer: fine) {
-            .gallery-slide:hover { flex:5; filter:saturate(1); border-color:var(--primary); }
-            .gallery-slide:hover .caption { opacity:1; transform:translateY(0); }
+        /* ── Gallery ───────────────────────────────────────────────────────── */
+        .gallery-container { 
+            display: flex; 
+            gap: 12px; 
+            width: 100%; 
+            height: 520px; 
+            padding: 0 5%; 
+            margin-top: 60px; 
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
         }
-
-        /* Active (tap) effect for touch devices (mobile) */
-        .gallery-slide:active { flex:5; filter:saturate(1); border-color:var(--primary); }
-        .gallery-slide:active .caption { opacity:1; transform:translateY(0); }
+        .gallery-slide { 
+            flex: 1;
+            height: 100%;
+            border-radius: 30px;
+            background-size: cover;
+            background-position: center;
+            transition: all .8s cubic-bezier(.25,1,.5,1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            filter: saturate(0.6);
+            border: 1px solid var(--border);
+        }
+        .gallery-slide:hover { 
+            flex: 5; 
+            filter: saturate(1.1); 
+            border-color: var(--primary); 
+        }
+        .gallery-slide .caption { 
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            opacity: 0;
+            transition: all .45s;
+            transform: translateY(20px);
+            background: rgba(0,0,0,.65);
+            backdrop-filter: blur(8px);
+            padding: 14px 20px;
+            border-radius: 14px;
+            color: #fff;
+            mix-blend-mode: difference;
+            isolation: isolate;
+            pointer-events: none;
+        }
+        .gallery-slide:hover .caption { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
 
         .ticker-wrap { width:100%; overflow:hidden; background:var(--card-bg); padding:60px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
         .ticker-move { display:flex; width:max-content; animation:ticker 25s linear infinite; }
@@ -102,21 +134,9 @@
             gap: 60px;
             min-height: 80vh;
         }
-        .hero-text {
-            flex: 1 1 45%;
-            max-width: 600px;
-        }
-        .hero-image {
-            flex: 1 1 45%;
-            max-width: 50%;
-        }
-        .hero-image img {
-            width: 100%;
-            height: auto;
-            max-height: 600px;
-            object-fit: contain;
-        }
-
+        .hero-text { flex: 1 1 45%; max-width: 600px; }
+        .hero-image { flex: 1 1 45%; max-width: 50%; }
+        .hero-image img { width: 100%; height: auto; max-height: 600px; object-fit: contain; }
         .grid-services { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:30px; }
         .bento-card { background:var(--card-bg); padding:50px; border-radius:35px; border:1px solid var(--border); transition:.5s cubic-bezier(.4,0,.2,1); position:relative; overflow:hidden; }
         .bento-card:hover { transform:translateY(-15px); border-color:var(--primary); background:linear-gradient(var(--card-bg),var(--bg)); }
@@ -135,12 +155,40 @@
         .socials a { color:var(--social-color); transition:.3s; }
         .socials a:hover { opacity:.8; transform:scale(1.15); }
 
+        /* ── RESPONSIVE Gallery fixes ─────────────────────────────────────── */
         @media (max-width: 1100px) {
             .flex-hero { flex-direction: column; text-align: center; }
             .hero-text, .hero-image { max-width: 100%; flex: 1 1 100%; }
             .hero-image { margin-top: 40px; }
-            .gallery-container { flex-direction:column; height:auto; }
-            .gallery-slide { height:400px; flex:none; }
+            
+            .gallery-container { 
+                flex-direction: column; 
+                height: auto; 
+                gap: 20px; 
+                padding: 0 16px; 
+                margin-top: 40px;
+            }
+            .gallery-slide { 
+                height: 400px; 
+                flex: unset !important; 
+                filter: saturate(0.85); 
+            }
+            .gallery-slide:hover { 
+                flex: unset !important; 
+                transform: scale(1.04); 
+                filter: saturate(1.1); 
+            }
+        }
+
+        @media (max-width: 768px) {
+            .gallery-slide { height: 340px; border-radius: 20px; }
+            .gallery-slide .caption {
+                bottom: 20px;
+                left: 20px;
+                right: 20px;
+                padding: 12px 16px;
+                font-size: 0.95rem;
+            }
         }
 
         @media (max-width: 900px) {
@@ -158,9 +206,7 @@
     </style>
 </head>
 <body>
-
 <div id="body-overlay"></div>
-
 <header>
     <div class="navbar">
         <div class="logo-box">
@@ -200,13 +246,20 @@
     </section>
 
     <section id="projects">
-        <h2 class="lazy-reveal" style="font-size:3rem;margin-bottom:50px">Architectural Portfolio</h2>
+        <h2 class="lazy-reveal" style="font-size:3rem;margin-bottom:50px;text-align:center">Architectural Portfolio</h2>
         <div class="gallery-container">
-            <div class="gallery-slide" style="background-image:url('https://images.unsplash.com/photo-1551288049-bbbda536339a?q=80&w=2070')"><div class="caption"><h3>Data Architecture</h3><p>Affiliate tracking systems.</p></div></div>
-            <div class="gallery-slide" style="background-image:url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015')"><div class="caption"><h3>Ad Mechanics</h3><p>Meta Ads Scaling.</p></div></div>
-            <div class="gallery-slide" style="background-image:url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?q=80&w=2070')"><div class="caption"><h3>Agro Logistics</h3><p>Tadokk Farms Bridge.</p></div></div>
-            <div class="gallery-slide" style="background-image:url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070')"><div class="caption"><h3>Fullstack Dev</h3><p>Custom Engineering.</p></div></div>
-            <!-- Add more .gallery-slide divs here to expand the gallery -->
+            <div class="gallery-slide" style="background-image:url('https://images.unsplash.com/photo-1551288049-bbbda536339a?q=80&w=2070')">
+                <div class="caption"><h3>Data Architecture</h3><p>Affiliate tracking systems.</p></div>
+            </div>
+            <div class="gallery-slide" style="background-image:url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015')">
+                <div class="caption"><h3>Ad Mechanics</h3><p>Meta Ads Scaling.</p></div>
+            </div>
+            <div class="gallery-slide" style="background-image:url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?q=80&w=2070')">
+                <div class="caption"><h3>Agro Logistics</h3><p>Tadokk Farms Bridge.</p></div>
+            </div>
+            <div class="gallery-slide" style="background-image:url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070')">
+                <div class="caption"><h3>Fullstack Dev</h3><p>Custom Engineering.</p></div>
+            </div>
         </div>
     </section>
 
@@ -214,12 +267,12 @@
         <h2 class="lazy-reveal" style="font-size:3rem;text-align:center;margin-bottom:70px">Featured Works <span style="font-size:1.4rem;opacity:.6">· Interactive Showcase</span></h2>
         <div class="carousel-container">
             <div class="carousel-track" id="carouselTrack">
-                <!-- Original set -->
+                <!-- Original items -->
                 <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1558494949-ef0d8a7b0a0e?q=80&w=1974')"></div><div class="card-content"><h3>Enterprise Ad Pipeline</h3><p>Automated scaling system handling 7-figure daily spend</p></div></div>
                 <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=2070')"></div><div class="card-content"><h3>Agro-Chain Dashboard</h3><p>Real-time logistics & yield prediction</p></div></div>
                 <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070')"></div><div class="card-content"><h3>Performance Terminal</h3><p>Custom analytics & monitoring suite</p></div></div>
                 <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2074')"></div><div class="card-content"><h3>Affiliate Architecture</h3><p>Multi-layer tracking & fraud prevention</p></div></div>
-                <!-- Duplicated set for seamless infinite scroll -->
+                <!-- Duplicated items for seamless infinite scroll -->
                 <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1558494949-ef0d8a7b0a0e?q=80&w=1974')"></div><div class="card-content"><h3>Enterprise Ad Pipeline</h3><p>Automated scaling system handling 7-figure daily spend</p></div></div>
                 <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=2070')"></div><div class="card-content"><h3>Agro-Chain Dashboard</h3><p>Real-time logistics & yield prediction</p></div></div>
                 <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070')"></div><div class="card-content"><h3>Performance Terminal</h3><p>Custom analytics & monitoring suite</p></div></div>
@@ -324,29 +377,39 @@ function toggleNav() {
 }
 
 document.addEventListener('click', e => {
-    if (sideNav.classList.contains('open') && !sideNav.contains(e.target) && !e.target.closest('.menu-trigger')) {
+    if (sideNav.classList.contains('open') && 
+        !sideNav.contains(e.target) && 
+        !e.target.closest('.menu-trigger')) {
         toggleNav();
     }
 });
 
 function toggleTheme() {
-    const current = document.documentElement.getAttribute('data-theme');
-    document.documentElement.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+    const t = document.documentElement.getAttribute('data-theme');
+    document.documentElement.setAttribute('data-theme', t === 'dark' ? 'light' : 'dark');
 }
 
 const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
         if (entry.isIntersecting) entry.target.classList.add('active');
     });
-}, { threshold: .1 });
+}, { threshold: 0.1 });
 
 document.querySelectorAll('.lazy-reveal').forEach(el => observer.observe(el));
 
 const terminal = document.getElementById('terminal');
-const messages = ["Syncing database clusters...", "Encrypting affiliate links...", "Scaling Facebook pixel events...", "Fetching CHS League standings...", "Optimizing CSS Grid layouts...", "Heartbeat: OK."];
+const messages = [
+    "Syncing database clusters...",
+    "Encrypting affiliate links...",
+    "Scaling Facebook pixel events...",
+    "Fetching CHS League standings...",
+    "Optimizing CSS Grid layouts...",
+    "Heartbeat: OK."
+];
+
 setInterval(() => {
     let div = document.createElement('div');
-    div.innerText = `> [LOG] ${messages[Math.floor(Math.random() * messages.length)]}`;
+    div.innerText = `> [LOG] ${messages[Math.floor(Math.random()*messages.length)]}`;
     terminal.appendChild(div);
     if (terminal.childNodes.length > 15) terminal.removeChild(terminal.firstChild);
 }, 3000);
@@ -362,10 +425,10 @@ setInterval(() => {
     document.getElementById("countdown").innerHTML = `${d}d : ${h}h : ${m}m : ${s}s`;
 }, 1000);
 
-// Featured Works Carousel - Infinite, mobile-friendly
+// Carousel (Featured Works - unchanged)
 const track = document.getElementById('carouselTrack');
 const cards = track.querySelectorAll('.carousel-card');
-const cardWidth = cards[0].offsetWidth + 30; // width + gap
+const cardWidth = cards[0].offsetWidth + 30;
 let currentIndex = 0;
 
 function moveCarousel(direction) {
@@ -376,7 +439,6 @@ function moveCarousel(direction) {
 }
 
 let autoplay = setInterval(() => moveCarousel(1), 4000);
-
 track.parentElement.addEventListener('mouseenter', () => clearInterval(autoplay));
 track.parentElement.addEventListener('mouseleave', () => {
     autoplay = setInterval(() => moveCarousel(1), 4000);
