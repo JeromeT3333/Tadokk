@@ -55,22 +55,32 @@
         #body-overlay { position:fixed; inset:0; background:var(--overlay); backdrop-filter:blur(8px); z-index:1040; opacity:0; pointer-events:none; transition:.4s; }
         #body-overlay.active { opacity:1; pointer-events:auto; }
 
+        /* Architectural Portfolio Gallery - Fixed for mobile */
         .gallery-container { display:flex; gap:15px; width:100%; height:500px; margin-top:50px; }
-        .gallery-slide { flex:1; height:100%; border-radius:30px; background-size:cover; background-position:center; transition:all .8s cubic-bezier(.25,1,.5,1); cursor:pointer; position:relative; overflow:hidden; filter:saturate(.5); border:1px solid var(--border); }
-        .gallery-slide:hover { flex:5; filter:saturate(1); border-color:var(--primary); }
+        .gallery-slide { flex:1; height:100%; border-radius:30px; background-size:cover; background-position:center; transition:all .8s cubic-bezier(.25,1,.5,1); position:relative; overflow:hidden; filter:saturate(.5); border:1px solid var(--border); }
         .gallery-slide .caption { position:absolute; bottom:30px; left:30px; opacity:0; transition:all .45s; transform:translateY(20px); background:rgba(0,0,0,.65); backdrop-filter:blur(8px); padding:14px 20px; border-radius:14px; color:#fff; mix-blend-mode:difference; isolation:isolate; pointer-events:none; }
-        .gallery-slide:hover .caption { opacity:1; transform:translateY(0); }
+
+        /* Hover effect only on devices that support hover (desktop) */
+        @media (hover: hover) and (pointer: fine) {
+            .gallery-slide:hover { flex:5; filter:saturate(1); border-color:var(--primary); }
+            .gallery-slide:hover .caption { opacity:1; transform:translateY(0); }
+        }
+
+        /* Active (tap) effect for touch devices (mobile) */
+        .gallery-slide:active { flex:5; filter:saturate(1); border-color:var(--primary); }
+        .gallery-slide:active .caption { opacity:1; transform:translateY(0); }
 
         .ticker-wrap { width:100%; overflow:hidden; background:var(--card-bg); padding:60px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
-        .ticker-move { display:flex; width:max-content; animation:ticker 41.7s linear infinite; }
+        .ticker-move { display:flex; width:max-content; animation:ticker 25s linear infinite; }
         .ticker-move:hover { animation-play-state:paused; }
-        .testimonial-box { width:400px; padding:40px; margin:0 20px; background:var(--bg); border-radius:24px; border:1px solid var(--border); }
+        .testimonial-box { width:400px; padding:40px; margin:0 20px; background:var(--bg); border-radius:24px; border:1px solid var(--border); display:flex; align-items:center; gap:25px; }
+        .testimonial-box img { width:80px; height:80px; border-radius:50%; object-fit:cover; flex-shrink:0; }
+        .testimonial-box .quote { flex:1; }
         @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 
         #featured-gallery { padding:140px 5% 100px; background:linear-gradient(135deg,var(--card-bg) 0%,rgba(99,102,241,.08) 100%); position:relative; }
         .carousel-container { position:relative; overflow:hidden; padding:40px 0; }
-        .carousel-track { display:flex; gap:30px; animation:carousel-slide 28s linear infinite; will-change:transform; transition:transform .4s; }
-        .carousel-track:hover { animation-play-state:paused; }
+        .carousel-track { display:flex; gap:30px; transition: transform 0.6s ease; }
         .carousel-card { flex:0 0 380px; height:520px; background:var(--card-bg); border-radius:24px; overflow:hidden; border:1px solid var(--border); transition:all .5s cubic-bezier(.34,1.56,.64,1); }
         .carousel-card:hover { transform:scale(1.08) translateY(-15px) rotate(1.5deg); box-shadow:0 25px 60px rgba(99,102,241,.25); border-color:var(--primary); }
         .card-image { height:60%; background-size:cover; background-position:center; position:relative; }
@@ -78,8 +88,6 @@
         .card-content { padding:24px; text-align:center; }
         .card-content h3 { font-size:1.5rem; margin-bottom:12px; color:var(--primary); }
         .card-content p { opacity:.75; font-size:1rem; line-height:1.5; }
-        @keyframes carousel-slide { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-
         .carousel-control { position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,.5); color:#fff; border:none; width:60px; height:60px; border-radius:50%; font-size:1.6rem; cursor:pointer; display:flex; align-items:center; justify-content:center; opacity:.7; transition:all .3s; backdrop-filter:blur(8px); z-index:10; }
         .carousel-control:hover { background:var(--primary); opacity:1; transform:translateY(-50%) scale(1.15); }
         .carousel-control.prev { left:20px; }
@@ -132,7 +140,7 @@
             .hero-text, .hero-image { max-width: 100%; flex: 1 1 100%; }
             .hero-image { margin-top: 40px; }
             .gallery-container { flex-direction:column; height:auto; }
-            .gallery-slide { height:400px; }
+            .gallery-slide { height:400px; flex:none; }
         }
 
         @media (max-width: 900px) {
@@ -144,6 +152,8 @@
         @media (max-width: 600px) {
             .carousel-card { flex:0 0 85vw; height:440px; }
             .carousel-control { opacity:.9; }
+            .testimonial-box { width:320px; flex-direction:column; text-align:center; padding:30px; }
+            .testimonial-box img { margin-bottom:15px; }
         }
     </style>
 </head>
@@ -189,7 +199,6 @@
         </div>
     </section>
 
-    <!-- Rest of your sections remain unchanged -->
     <section id="projects">
         <h2 class="lazy-reveal" style="font-size:3rem;margin-bottom:50px">Architectural Portfolio</h2>
         <div class="gallery-container">
@@ -197,6 +206,7 @@
             <div class="gallery-slide" style="background-image:url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015')"><div class="caption"><h3>Ad Mechanics</h3><p>Meta Ads Scaling.</p></div></div>
             <div class="gallery-slide" style="background-image:url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?q=80&w=2070')"><div class="caption"><h3>Agro Logistics</h3><p>Tadokk Farms Bridge.</p></div></div>
             <div class="gallery-slide" style="background-image:url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070')"><div class="caption"><h3>Fullstack Dev</h3><p>Custom Engineering.</p></div></div>
+            <!-- Add more .gallery-slide divs here to expand the gallery -->
         </div>
     </section>
 
@@ -204,15 +214,19 @@
         <h2 class="lazy-reveal" style="font-size:3rem;text-align:center;margin-bottom:70px">Featured Works <span style="font-size:1.4rem;opacity:.6">· Interactive Showcase</span></h2>
         <div class="carousel-container">
             <div class="carousel-track" id="carouselTrack">
+                <!-- Original set -->
                 <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1558494949-ef0d8a7b0a0e?q=80&w=1974')"></div><div class="card-content"><h3>Enterprise Ad Pipeline</h3><p>Automated scaling system handling 7-figure daily spend</p></div></div>
                 <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=2070')"></div><div class="card-content"><h3>Agro-Chain Dashboard</h3><p>Real-time logistics & yield prediction</p></div></div>
                 <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070')"></div><div class="card-content"><h3>Performance Terminal</h3><p>Custom analytics & monitoring suite</p></div></div>
                 <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2074')"></div><div class="card-content"><h3>Affiliate Architecture</h3><p>Multi-layer tracking & fraud prevention</p></div></div>
+                <!-- Duplicated set for seamless infinite scroll -->
                 <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1558494949-ef0d8a7b0a0e?q=80&w=1974')"></div><div class="card-content"><h3>Enterprise Ad Pipeline</h3><p>Automated scaling system handling 7-figure daily spend</p></div></div>
                 <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=2070')"></div><div class="card-content"><h3>Agro-Chain Dashboard</h3><p>Real-time logistics & yield prediction</p></div></div>
+                <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070')"></div><div class="card-content"><h3>Performance Terminal</h3><p>Custom analytics & monitoring suite</p></div></div>
+                <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2074')"></div><div class="card-content"><h3>Affiliate Architecture</h3><p>Multi-layer tracking & fraud prevention</p></div></div>
             </div>
-            <button class="carousel-control prev" onclick="scrollCarousel(-1)" title="Previous"><i class="fas fa-chevron-left"></i></button>
-            <button class="carousel-control next" onclick="scrollCarousel(1)" title="Next"><i class="fas fa-chevron-right"></i></button>
+            <button class="carousel-control prev" onclick="moveCarousel(-1)" title="Previous"><i class="fas fa-chevron-left"></i></button>
+            <button class="carousel-control next" onclick="moveCarousel(1)" title="Next"><i class="fas fa-chevron-right"></i></button>
         </div>
     </section>
 
@@ -227,12 +241,31 @@
     <section id="testimonials" style="max-width:100%;padding:0">
         <div class="ticker-wrap">
             <div class="ticker-move">
-                <div class="testimonial-box">"Tadokk's ad strategy increased our ROI by 400% in 3 months." <strong>- Client X</strong></div>
-                <div class="testimonial-box">"The most transparent and technically sound agency in the region." <strong>- Dev Lead</strong></div>
-                <div class="testimonial-box">"Flawless integration between physical logistics and digital sales." <strong>- Farm Partner</strong></div>
-                <div class="testimonial-box">"Tadokk's ad strategy increased our ROI by 400% in 3 months." <strong>- Client X</strong></div>
-                <div class="testimonial-box">"The most transparent and technically sound agency in the region." <strong>- Dev Lead</strong></div>
-                <div class="testimonial-box">"Flawless integration between physical logistics and digital sales." <strong>- Farm Partner</strong></div>
+                <div class="testimonial-box">
+                    <img src="testimonialimg/1.jpg" alt="Client X">
+                    <div class="quote">"Tadokk's ad strategy increased our ROI by 400% in 3 months." <strong>- Client X</strong></div>
+                </div>
+                <div class="testimonial-box">
+                    <img src="testimonialimg/2.jpg" alt="Dev Lead">
+                    <div class="quote">"The most transparent and technically sound agency in the region." <strong>- Dev Lead</strong></div>
+                </div>
+                <div class="testimonial-box">
+                    <img src="testimonialimg/3.jpg" alt="Farm Partner">
+                    <div class="quote">"Flawless integration between physical logistics and digital sales." <strong>- Farm Partner</strong></div>
+                </div>
+                <!-- Duplicated for seamless loop -->
+                <div class="testimonial-box">
+                    <img src="testimonialimg/1.jpg" alt="Client X">
+                    <div class="quote">"Tadokk's ad strategy increased our ROI by 400% in 3 months." <strong>- Client X</strong></div>
+                </div>
+                <div class="testimonial-box">
+                    <img src="testimonialimg/2.jpg" alt="Dev Lead">
+                    <div class="quote">"The most transparent and technically sound agency in the region." <strong>- Dev Lead</strong></div>
+                </div>
+                <div class="testimonial-box">
+                    <img src="testimonialimg/3.jpg" alt="Farm Partner">
+                    <div class="quote">"Flawless integration between physical logistics and digital sales." <strong>- Farm Partner</strong></div>
+                </div>
             </div>
         </div>
     </section>
@@ -275,27 +308,79 @@
             </div>
         </div>
     </div>
-    <p style="text-align:center;opacity:.4;font-size:.8rem;border-top:1px solid var(--border);padding-top:40px">© 2025 TADOKK GLOBAL. ALL RIGHTS RESERVED.</p>
+    <p style="text-align:center;opacity:.4;font-size:.8rem;border-top:1px solid var(--border);padding-top:40px">© 2026 Tadokk. All Rights Reserved.</p>
 </footer>
 
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
 AOS.init();
-const sideNav=document.getElementById('sideNav'),overlay=document.getElementById('body-overlay');
-function toggleNav(){sideNav.classList.toggle('open');overlay.classList.toggle('active')}
-document.addEventListener('click',e=>{if(sideNav.classList.contains('open')&&!sideNav.contains(e.target)&&!e.target.closest('.menu-trigger'))toggleNav()});
-function toggleTheme(){const t=document.documentElement.getAttribute('data-theme');document.documentElement.setAttribute('data-theme',t==='dark'?'light':'dark')}
-const observer=new IntersectionObserver(e=>{e.forEach(e=>{e.isIntersecting&&e.target.classList.add('active')})},{threshold:.1});
-document.querySelectorAll('.lazy-reveal').forEach(e=>observer.observe(e));
-const terminal=document.getElementById('terminal');
-const messages=["Syncing database clusters...","Encrypting affiliate links...","Scaling Facebook pixel events...","Fetching CHS League standings...","Optimizing CSS Grid layouts...","Heartbeat: OK."];
-setInterval(()=>{let e=document.createElement('div');e.innerText=`> [LOG] ${messages[Math.floor(6*Math.random())]}`;terminal.appendChild(e);if(terminal.childNodes.length>15)terminal.removeChild(terminal.firstChild)},3000);
-const target=new Date("Aug 1, 2025 00:00:00").getTime();
-setInterval(()=>{const n=new Date().getTime(),d=Math.floor((target-n)/(864e5)),h=Math.floor((target-n)%864e5/36e5),m=Math.floor((target-n)%36e5/6e4),s=Math.floor((target-n)%6e4/1e3);document.getElementById("countdown").innerHTML=`${d}d : ${h}h : ${m}m : ${s}s`},1e3);
-function scrollCarousel(dir){const t=document.getElementById('carouselTrack'),w=t.querySelector('.carousel-card').offsetWidth+30;t.scrollBy({left:dir*w*1.2,behavior:'smooth'})}
-let autoplayInterval=setInterval(()=>scrollCarousel(1),4500);
-document.getElementById('carouselTrack').addEventListener('mouseenter',()=>clearInterval(autoplayInterval));
-document.getElementById('carouselTrack').addEventListener('mouseleave',()=>{autoplayInterval=setInterval(()=>scrollCarousel(1),4500)});
+
+const sideNav = document.getElementById('sideNav');
+const overlay = document.getElementById('body-overlay');
+
+function toggleNav() {
+    sideNav.classList.toggle('open');
+    overlay.classList.toggle('active');
+}
+
+document.addEventListener('click', e => {
+    if (sideNav.classList.contains('open') && !sideNav.contains(e.target) && !e.target.closest('.menu-trigger')) {
+        toggleNav();
+    }
+});
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    document.documentElement.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+}
+
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('active');
+    });
+}, { threshold: .1 });
+
+document.querySelectorAll('.lazy-reveal').forEach(el => observer.observe(el));
+
+const terminal = document.getElementById('terminal');
+const messages = ["Syncing database clusters...", "Encrypting affiliate links...", "Scaling Facebook pixel events...", "Fetching CHS League standings...", "Optimizing CSS Grid layouts...", "Heartbeat: OK."];
+setInterval(() => {
+    let div = document.createElement('div');
+    div.innerText = `> [LOG] ${messages[Math.floor(Math.random() * messages.length)]}`;
+    terminal.appendChild(div);
+    if (terminal.childNodes.length > 15) terminal.removeChild(terminal.firstChild);
+}, 3000);
+
+const target = new Date("Aug 1, 2025 00:00:00").getTime();
+setInterval(() => {
+    const now = new Date().getTime();
+    const distance = target - now;
+    const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const s = Math.floor((distance % (1000 * 60)) / 1000);
+    document.getElementById("countdown").innerHTML = `${d}d : ${h}h : ${m}m : ${s}s`;
+}, 1000);
+
+// Featured Works Carousel - Infinite, mobile-friendly
+const track = document.getElementById('carouselTrack');
+const cards = track.querySelectorAll('.carousel-card');
+const cardWidth = cards[0].offsetWidth + 30; // width + gap
+let currentIndex = 0;
+
+function moveCarousel(direction) {
+    currentIndex += direction;
+    if (currentIndex < 0) currentIndex = cards.length / 2 - 1;
+    if (currentIndex >= cards.length / 2) currentIndex = 0;
+    track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+}
+
+let autoplay = setInterval(() => moveCarousel(1), 4000);
+
+track.parentElement.addEventListener('mouseenter', () => clearInterval(autoplay));
+track.parentElement.addEventListener('mouseleave', () => {
+    autoplay = setInterval(() => moveCarousel(1), 4000);
+});
 </script>
 </body>
 </html>
