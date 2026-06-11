@@ -1,375 +1,233 @@
-
-html_code = '''<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" class="light">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AutoDetect Template Filler - Gemini Powered</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:#0a0e17;color:#e2e8f0;min-height:100vh;line-height:1.5}
-.container{max-width:1520px;margin:0 auto;padding:14px}
-header{text-align:center;padding:16px 0;border-bottom:1px solid #1e293b;margin-bottom:16px}
-h1{font-size:1.7rem;background:linear-gradient(90deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.subtitle{color:#475569;font-size:.92rem;margin-top:4px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(max-width:1000px){.grid{grid-template-columns:1fr}}
-.card{background:#111827;border-radius:12px;padding:18px;border:1px solid #1e293b}
-.card h2{font-size:1.05rem;margin-bottom:12px;color:#94a3b8;display:flex;align-items:center;gap:8px}
-.upload-zone{border:2px dashed #334155;border-radius:10px;padding:30px;text-align:center;cursor:pointer;transition:all .3s;background:#0a0e17}
-.upload-zone:hover,.upload-zone.dragover{border-color:#3b82f6;background:#111827}
-.upload-zone input{display:none}
-.upload-zone .icon{font-size:2.2rem;margin-bottom:6px}
-.upload-zone p{font-size:.9rem}
-.upload-zone .sub{font-size:.78rem;color:#475569;margin-top:4px}
-.canvas-wrap{position:relative;background:#0a0e17;border-radius:8px;overflow:hidden;border:1px solid #1e293b;display:inline-block;user-select:none;touch-action:none}
-canvas{display:block;cursor:crosshair}
-.controls{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
-button{background:#2563eb;color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.85rem;font-weight:500;transition:all .2s}
-button:hover{background:#1d4ed8}
-button.secondary{background:#374151}
-button.secondary:hover{background:#4b5563}
-button.success{background:#059669}
-button.success:hover{background:#047857}
-button.danger{background:#dc2626}
-button.danger:hover{background:#b91c1c}
-button:disabled{opacity:.4;cursor:not-allowed}
-button.small{padding:5px 10px;font-size:.78rem}
-.detect-panel{background:#0a0e17;border-radius:8px;padding:14px;border:1px solid #1e293b;margin-top:12px}
-.detect-panel h3{font-size:.95rem;color:#e2e8f0;margin-bottom:10px;display:flex;align-items:center;gap:8px}
-.detect-panel .detect-count{background:#1e3a5f;color:#60a5fa;padding:2px 8px;border-radius:10px;font-size:.75rem}
-.detect-list{max-height:320px;overflow-y:auto}
-.detect-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#111827;border-radius:8px;margin-bottom:8px;border:1px solid #1e293b;cursor:pointer;transition:all .2s}
-.detect-item:hover{border-color:#3b82f6;background:#1e293b}
-.detect-item.selected{border-color:#10b981;background:#064e3b15}
-.detect-item input[type=checkbox]{width:18px;height:18px;accent-color:#10b981;cursor:pointer;flex-shrink:0}
-.detect-item .detect-preview{width:48px;height:36px;border-radius:4px;border:1px solid #334155;background:#0a0e17;flex-shrink:0;object-fit:contain}
-.detect-item .detect-info{flex:1;min-width:0}
-.detect-item .detect-info .name{font-size:.88rem;color:#e2e8f0;font-weight:500}
-.detect-item .detect-info .meta{font-size:.75rem;color:#64748b;margin-top:2px}
-.detect-item .detect-type{font-size:.7rem;padding:2px 8px;border-radius:10px;font-weight:600;flex-shrink:0}
-.type-text{background:#1e3a5f;color:#60a5fa}
-.type-image{background:#3f1e5f;color:#c084fc}
-.type-icon{background:#1e3a1e;color:#4ade80}
-.type-signature{background:#5f1e1e;color:#f87171}
-.detect-actions{display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid #1e293b}
-.field-list{max-height:380px;overflow-y:auto}
-.field-card{background:#0a0e17;border-radius:8px;padding:12px;margin-bottom:8px;border:1px solid #1e293b;border-left:3px solid #3b82f6}
-.field-card.selected{border-left-color:#10b981;background:#064e3b12}
-.field-card .field-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.field-card .field-header strong{color:#60a5fa;min-width:18px}
-.field-card input[type=text]{flex:1;min-width:80px;background:#1e293b;border:1px solid #334155;color:#fff;padding:5px 10px;border-radius:5px;font-size:.85rem}
-.field-card .field-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
-.field-card .field-grid>div{display:flex;align-items:center;gap:5px}
-.field-card label{font-size:.74rem;color:#64748b;white-space:nowrap}
-.field-card input[type=number]{width:52px;background:#1e293b;border:1px solid #334155;color:#fff;padding:4px;border-radius:5px;font-size:.8rem}
-.field-card input[type=color]{width:32px;height:24px;border:none;border-radius:4px;cursor:pointer}
-.field-card .actions{display:flex;gap:5px;margin-top:8px}
-.field-card .actions button{padding:4px 8px;font-size:.75rem}
-.field-card .clean-toggle{display:flex;align-items:center;gap:5px;font-size:.76rem;color:#94a3b8}
-.field-card .clean-toggle input{width:14px;height:14px}
-.spreadsheet{overflow-x:auto;margin-top:12px}
-table{width:100%;border-collapse:collapse;font-size:.84rem;min-width:500px}
-th,td{padding:7px 9px;text-align:left;border:1px solid #1e293b}
-th{background:#111827;color:#94a3b8;font-weight:600;position:sticky;top:0}
-td{background:#0a0e17}
-td input{width:100%;background:transparent;border:none;color:#e2e8f0;padding:3px;font-size:.84rem}
-td input:focus{outline:2px solid #2563eb;border-radius:3px}
-.row-actions{display:flex;gap:3px}
-.row-actions button{padding:3px 6px;font-size:.7rem}
-.progress-container{display:none;margin-top:14px;padding:14px;background:#111827;border-radius:10px;border:1px solid #1e293b}
-.progress-bar{width:100%;height:16px;background:#1e293b;border-radius:8px;overflow:hidden;margin-top:6px}
-.progress-fill{height:100%;background:linear-gradient(90deg,#2563eb,#7c3aed);width:0%;transition:width .3s;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700}
-.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-top:14px}
-.gallery-item{background:#111827;border-radius:10px;overflow:hidden;border:1px solid #1e293b;transition:transform .2s;position:relative}
-.gallery-item:hover{transform:scale(1.02)}
-.gallery-item img{width:100%;height:130px;object-fit:cover;display:block}
-.gallery-item .info{padding:7px;font-size:.75rem;color:#64748b}
-.gallery-item .dl-btn{position:absolute;top:5px;right:5px;background:rgba(0,0,0,.75);color:#fff;border:none;padding:4px 7px;border-radius:5px;cursor:pointer;font-size:.7rem}
-.instructions{background:#111827;border-left:3px solid #2563eb;padding:12px;border-radius:0 8px 8px 0;margin-bottom:14px;font-size:.85rem;line-height:1.6;color:#94a3b8}
-.instructions code{background:#0a0e17;padding:2px 5px;border-radius:4px;font-family:monospace;color:#60a5fa}
-.instructions strong{color:#e2e8f0}
-.hidden{display:none!important}
-.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:600}
-.badge-blue{background:#1e3a5f;color:#60a5fa}
-.badge-green{background:#064e3b;color:#34d399}
-.badge-purple{background:#3f1e5f;color:#c084fc}
-.badge-amber{background:#5f3f1e;color:#fbbf24}
-.mode-indicator{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.7);color:#fbbf24;padding:3px 10px;border-radius:5px;font-size:.75rem;font-weight:600;pointer-events:none;z-index:10}
-.hint-bar{background:#1e3a5f;color:#93c5fd;padding:7px 12px;border-radius:6px;font-size:.8rem;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.empty-state{color:#475569;text-align:center;padding:24px;font-size:.88rem}
-.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:2000}
-.modal-overlay.active{display:flex}
-.modal{background:#111827;border-radius:14px;padding:18px;max-width:90vw;max-height:90vh;overflow:auto;border:1px solid #1e293b}
-.modal h3{margin-bottom:12px;color:#e2e8f0}
-.modal canvas{max-width:100%;border-radius:6px;border:1px solid #1e293b}
-.modal .close-btn{float:right;background:#374151;padding:5px 12px;font-size:.78rem}
-.img-cell{display:flex;align-items:center;gap:6px}
-.img-cell img{height:28px;width:28px;object-fit:cover;border-radius:4px;border:1px solid #334155}
-.img-cell .img-name{font-size:.75rem;color:#94a3b8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:80px}
-.img-cell button{background:#374151;padding:3px 8px;font-size:.7rem}
-.template-saved{background:#064e3b;color:#34d399;padding:6px 12px;border-radius:6px;font-size:.8rem;margin-top:8px;display:none;align-items:center;gap:6px}
-.template-saved.active{display:flex}
-.gemini-status{padding:4px 10px;border-radius:10px;font-size:.72rem;font-weight:600;margin-left:auto}
-.gemini-on{background:#064e3b;color:#34d399}
-.gemini-off{background:#5f1e1e;color:#f87171}
-.api-key-input{background:#1e293b;border:1px solid #334155;color:#fff;padding:6px 10px;border-radius:5px;font-size:.8rem;width:280px}
-.settings-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
-.loading-spinner{display:inline-block;width:14px;height:14px;border:2px solid #334155;border-top-color:#60a5fa;border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.merge-slider{width:120px}
-.confidence-badge{font-size:.65rem;padding:1px 6px;border-radius:8px;margin-left:4px}
-.conf-high{background:#064e3b;color:#34d399}
-.conf-med{background:#5f3f1e;color:#fbbf24}
-.conf-low{background:#5f1e1e;color:#f87171}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Live Scores</title>
+  <link rel="icon" href="Tadokkico1.png" type="image/x-icon">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+
+    /* Splash animation */
+    #intro-screen {
+      animation: splash 3.5s forwards;
+      transform-origin: top left;
+    }
+    @keyframes splash {
+      0%   { transform: scale(1); opacity: 1; border-radius: 0; }
+      70%  { transform: scale(1); opacity: 1; border-radius: 0; }
+      85%  { transform: scale(0.7); opacity: 0.9; border-radius: 50px; }
+      100% { transform: scale(0); opacity: 0; border-radius: 50px; }
+    }
+
+    /* Loader logo bounce */
+    .logo-bounce { animation: bounceScale 1.5s infinite ease-in-out; }
+    @keyframes bounceScale {
+      0%,100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    /* Sidebar */
+    .sidebar { transform: translateX(100%); transition: transform 0.3s ease; }
+    .sidebar.active { transform: translateX(0); }
+    .overlay { background: rgba(0,0,0,0.5); }
+
+    /* Dark mode overrides */
+    .dark body { background-color: #111827; color: #f3f4f6; }
+    .dark .bg-white { background-color: #1f2937; }
+    .dark .text-gray-500 { color: #9ca3af; }
+    .dark header { background-color: #1e3a8a; }
+    .dark .sidebar { background-color: rgba(31,41,55,0.9); }
+  </style>
 </head>
-<body>
-<div class="container">
-<header>
-<h1>AutoDetect Template Filler</h1>
-<p class="subtitle">Gemini Vision-powered field detection • Smart text merging • Template persistence</p>
-</header>
+<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col items-center justify-start">
 
-<div class="instructions">
-<strong>Workflow:</strong>
-<ol style="margin-left:18px;margin-top:4px">
-<li>Upload a template image</li>
-<li>Click <strong>Auto-Detect with Gemini</strong> for intelligent field recognition</li>
-<li><strong>Tick checkboxes</strong> to select fields you want</li>
-<li>Click <strong>Apply Selected</strong> — they become spreadsheet columns</li>
-<li><strong>Drag</strong> boxes to move. <strong>Drag green handles</strong> to resize</li>
-<li>Image fields accept image uploads in spreadsheet cells</li>
-<li>Fill data and <strong>Render All</strong></li>
-<li><strong>Save Template</strong> to persist your work</li>
-</ol>
-</div>
+  <!-- Splash -->
+  <div id="intro-screen" class="fixed inset-0 bg-blue-600 flex items-center justify-center z-50">
+    <img src="Tadokkico3.png" alt="Tadokk Logo" class="h-24 w-24 animate-pulse">
+  </div>
 
-<!-- API Key & Settings -->
-<div class="card" style="margin-bottom:14px">
-<h2>🔧 Settings</h2>
-<div class="settings-row">
-<label style="font-size:.85rem;color:#94a3b8">Gemini API Key:</label>
-<input type="password" id="apiKeyInput" class="api-key-input" placeholder="Enter Gemini API Key..." value="AIzaSyCyD2IgrkRij6TbfV8we0KKHJxbviScJAc">
-<button onclick="testApiKey()" class="small secondary">Test</button>
-<span class="gemini-status gemini-off" id="geminiStatus">Not Connected</span>
-</div>
-<div class="settings-row">
-<label style="font-size:.85rem;color:#94a3b8">Text Merge Distance:</label>
-<input type="range" id="mergeDistance" class="merge-slider" min="20" max="150" value="60">
-<span id="mergeValue" style="font-size:.8rem;color:#60a5fa;min-width:30px">60px</span>
-<label style="font-size:.85rem;color:#94a3b8;margin-left:20px">Min Field Size:</label>
-<input type="range" id="minFieldSize" class="merge-slider" min="20" max="100" value="30">
-<span id="minSizeValue" style="font-size:.8rem;color:#60a5fa;min-width:30px">30px</span>
-</div>
-</div>
+  <!-- Header -->
+  <header class="w-full flex items-center justify-between py-6 bg-blue-600 text-white shadow-lg px-6">
+    <a href="index.html"><img src="Tadokkico3.png" alt="Logo" class="h-10 w-10"></a>
+    <div class="text-center">
+      <h1 class="text-3xl md:text-5xl font-extrabold">Live Scores</h1>
+      <p class="text-sm md:text-lg opacity-90">Powered by Tadokk</p>
+    </div>
+    <button id="open-nav" class="text-white text-3xl">&#9776;</button>
+  </header>
 
-<div class="grid">
-<!-- LEFT -->
-<div>
-<div class="card">
-<h2>Upload Template</h2>
-<div class="upload-zone" id="uploadZone">
-<input type="file" id="imageInput" accept="image/*">
-<div class="icon">📁</div>
-<p>Drop image or click to browse</p>
-<p class="sub">JPG, PNG, WEBP, GIF</p>
-</div>
-<div class="canvas-wrap hidden" id="canvasWrap" style="margin-top:12px">
-<div class="mode-indicator" id="modeIndicator">Click "Auto-Detect" to find fields</div>
-<canvas id="templateCanvas"></canvas>
-</div>
-<div class="controls">
-<button onclick="autoDetectWithGemini()" id="autoDetectBtn" disabled>
-<span id="detectBtnText">Auto-Detect with Gemini</span>
-</button>
-<button onclick="autoDetectFallback()" class="secondary" id="fallbackBtn" disabled>Fallback (Local)</button>
-<button onclick="addManualField()" class="secondary" id="manualAddBtn" disabled>Add Manual</button>
-<button onclick="clearAllFields()" class="danger">Clear All</button>
-<button onclick="previewClean()" class="secondary" id="previewCleanBtn" disabled>Preview Clean</button>
-</div>
-<div class="template-saved" id="templateSaved">
-<span>✓</span> Template saved! Will auto-load on return.
-</div>
-<div class="controls" style="margin-top:8px">
-<button onclick="saveTemplate()" class="success" id="saveTemplateBtn" disabled>💾 Save Template</button>
-<button onclick="loadSavedTemplate()" class="secondary" id="loadTemplateBtn">📂 Load Saved</button>
-<button onclick="clearSavedTemplate()" class="danger small">Clear Cache</button>
-</div>
-</div>
+  <!-- Content -->
+  <div class="w-full max-w-4xl mx-auto opacity-0 transition" id="page-content">
+    <div id="loading" class="text-center py-10 hidden">
+      <img src="Tadokkico1.png" alt="Loading Logo" class="h-16 w-16 mx-auto logo-bounce">
+      <p class="mt-4 text-gray-600">Fetching scores...</p>
+    </div>
 
-<div class="card" style="margin-top:14px">
-<h2>Detected Regions <span class="detect-count" id="detectCount">0 found</span></h2>
-<div class="hint-bar" id="detectHint">Upload an image and click Auto-Detect with Gemini.</div>
-<div class="detect-list" id="detectList">
-<div class="empty-state">No detections yet.</div>
-</div>
-<div class="detect-actions" id="detectActions" style="display:none">
-<button onclick="selectAllDetections()" class="small">Select All</button>
-<button onclick="deselectAllDetections()" class="small secondary">Deselect All</button>
-<button onclick="applySelectedDetections()" class="success small">Apply Selected</button>
-</div>
-</div>
-</div>
+    <main id="scores-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 bg-white rounded-lg shadow-lg"></main>
 
-<!-- RIGHT -->
-<div>
-<div class="card">
-<h2>Selected Fields (<span id="fieldCount">0</span>) <span class="badge badge-green">Active</span></h2>
-<div class="hint-bar" id="fieldHint">Select fields from detection results. Only selected fields appear here and in the spreadsheet.</div>
-<div class="field-list" id="fieldList">
-<div class="empty-state">No fields selected yet.</div>
-</div>
-</div>
+    <footer class="text-center text-gray-500 text-xs mt-4">
+      Last updated: <span id="last-updated">--</span>
+    </footer>
 
-<div class="card" style="margin-top:14px">
-<h2>Data Spreadsheet</h2>
-<div class="controls" style="margin-bottom:12px">
-<button onclick="addRow()">Add Row</button>
-<button onclick="deleteLastRow()" class="danger">Remove Last</button>
-<button onclick="exportToExcel()" class="success">Excel</button>
-<button onclick="importFromExcel()" class="secondary">Import</button>
-<input type="file" id="excelInput" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleExcelImport(this)">
-</div>
-<div class="spreadsheet">
-<table id="dataTable">
-<thead><tr id="headerRow"><th>#</th><th>Actions</th></tr></thead>
-<tbody id="tableBody"></tbody>
-</table>
-</div>
-</div>
+    <section id="up-next" class="p-6 bg-white mt-6 rounded-lg shadow-lg">
+      <h2 class="text-xl font-bold text-blue-600 mb-4">Up Next</h2>
+      <div id="upcoming-container" class="space-y-4">
+        <p class="text-gray-500">No upcoming matches listed.</p>
+      </div>
+    </section>
 
-<div class="card" style="margin-top:14px">
-<h2>Render Output</h2>
-<div class="controls">
-<button onclick="renderAll()" class="success" style="font-size:.95rem;padding:11px 22px">Render All</button>
-<button onclick="downloadAll()" class="secondary" id="downloadBtn" disabled>Download All</button>
-<button onclick="clearGallery()" class="danger">Clear Gallery</button>
-</div>
-<div class="progress-container" id="progressContainer">
-<div style="display:flex;justify-content:space-between;align-items:center">
-<span id="progressText">Rendering...</span><span id="progressPercent">0%</span>
-</div>
-<div class="progress-bar"><div class="progress-fill" id="progressFill">0%</div></div>
-</div>
-<div class="gallery" id="gallery"></div>
-</div>
-</div>
-</div>
-</div>
+    <!-- Embedded Form Section -->
+    <section id="feedback-form" class="p-6 bg-white mt-6 rounded-2xl shadow-lg">
+      <h2 class="text-2xl font-extrabold text-blue-600 mb-4 text-center">Share Your Feedback</h2>
+      <p class="text-gray-600 text-center mb-6">We’d love to hear from you! Fill out the form below:</p>
+      <div class="rounded-xl overflow-hidden shadow-lg border border-gray-200">
+        <iframe 
+          src="https://form.svhrt.com/68d2d15c4e60dbe1c6db711f" 
+          class="w-full h-[650px] border-0"
+          loading="lazy">
+        </iframe>
+      </div>
+    </section>
 
-<input type="file" id="cellImageInput" accept="image/*" style="display:none">
-<div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
-<div class="modal" onclick="event.stopPropagation()">
-<button class="close-btn" onclick="closeModal()">Close</button>
-<h3>Clean Preview</h3>
-<canvas id="modalCanvas"></canvas>
-</div>
-</div>
+    <div id="error-message" class="text-center mt-4 text-red-600 font-medium hidden">
+      <p>Failed to load scores. Please hold on!</p>
+    </div>
+  </div>
 
-<script>
-// ==================== STATE ====================
-let templateImage=null,originalImageData=null;
-let detections=[];
-let detectionIdCounter=0;
-let fields=[];
-let fieldIdCounter=0;
-let renderedImages=[];
-let currentScale=1;
-let isDragging=false,dragField=null,dragMode=null;
-let dragStartX=0,dragStartY=0,dragStartField=null;
-const HANDLE_SIZE=10;
-let pendingImageCell=null;
-let currentImageId=null; // Unique ID for current image
-let geminiAvailable=false;
+  <!-- Overlay -->
+  <div id="overlay" class="overlay fixed inset-0 hidden z-20"></div>
 
-const canvas=document.getElementById('templateCanvas');
-const ctx=canvas.getContext('2d',{willReadFrequently:true});
-const cellImageInput=document.getElementById('cellImageInput');
+  <!-- Sidebar -->
+  <div id="sidebar" class="sidebar fixed top-0 right-0 h-full w-72 bg-white/80 backdrop-blur-md shadow-lg z-30 flex flex-col">
+    <div class="flex items-center justify-between p-4">
+      <a href="index.html"><img src="Tadokkico1.png" alt="Logo" class="h-10 w-10"></a>
+      <div class="flex items-center space-x-3">
+        <button id="theme-toggle" class="text-gray-600 hover:text-gray-900">
+          <i data-lucide="moon" class="w-6 h-6"></i>
+        </button>
+        <button id="close-nav" class="text-gray-600 hover:text-gray-900 text-2xl font-bold">&times;</button>
+      </div>
+    </div>
+    <nav class="flex-1 p-6 space-y-4">
+      <a href="#" class="block text-lg font-medium hover:text-blue-600">Home</a>
+      <a href="#" class="block text-lg font-medium hover:text-blue-600">Scores</a>
+      <a href="#" class="block text-lg font-medium hover:text-blue-600">News</a>
+      <a href="#" class="block text-lg font-medium hover:text-blue-600">Contact</a>
+    </nav>
+    <div class="p-4 flex flex-col items-center space-y-3">
+      <div class="flex space-x-4">
+        <a href="#"><i data-lucide="facebook" class="w-6 h-6 hover:text-blue-600"></i></a>
+        <a href="#"><i data-lucide="instagram" class="w-6 h-6 hover:text-pink-600"></i></a>
+        <a href="#"><i data-lucide="linkedin" class="w-6 h-6 hover:text-blue-700"></i></a>
+        <a href="#"><i data-lucide="x" class="w-6 h-6 hover:text-black"></i></a>
+        <a href="#"><i data-lucide="youtube" class="w-6 h-6 hover:text-red-600"></i></a>
+        <a href="#"><i data-lucide="whatsapp" class="w-6 h-6 hover:text-green-600"></i></a>
+        <a href="#"><i data-lucide="github" class="w-6 h-6 hover:text-gray-800"></i></a>
+      </div>
+      <p class="mt-2 text-xs text-gray-500">© Tadokk 2025</p>
+    </div>
+  </div>
 
-// ==================== SETTINGS ====================
-const apiKeyInput=document.getElementById('apiKeyInput');
-const mergeDistanceSlider=document.getElementById('mergeDistance');
-const minFieldSizeSlider=document.getElementById('minFieldSize');
+  <!-- Script -->
+  <script>
+    const SCORES_URL = "https://api.allorigins.win/raw?url=" + encodeURIComponent("https://docs.google.com/spreadsheets/d/e/2PACX-1vSSLEeAAtj-UvuFem6g0n-oKn7Y1Kr5O1e3OvYUwOjwOdF5Xh70Qz5N1xvrxuSYNk6GnJdd5W1xK6Dx/pub?output=csv");
+    const REFRESH_INTERVAL_MS = 30000;
 
-mergeDistanceSlider.addEventListener('input',e=>{
-document.getElementById('mergeValue').textContent=e.target.value+'px';
-});
-minFieldSizeSlider.addEventListener('input',e=>{
-document.getElementById('minSizeValue').textContent=e.target.value+'px';
-});
+    const scoresContainer = document.getElementById('scores-container');
+    const loadingIndicator = document.getElementById('loading');
+    const lastUpdated = document.getElementById('last-updated');
+    const errorMessage = document.getElementById('error-message');
+    const upcomingContainer = document.getElementById('upcoming-container');
 
-async function testApiKey(){
-const key=apiKeyInput.value.trim();
-if(!key){alert('Please enter an API key');return;}
-const status=document.getElementById('geminiStatus');
-status.textContent='Testing...';
-status.className='gemini-status';
-try{
-const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,{
-method:'POST',
-headers:{'Content-Type':'application/json'},
-body:JSON.stringify({contents:[{parts:[{text:'Hi'}]}]})
-});
-if(res.ok){
-status.textContent='Gemini Connected';
-status.className='gemini-status gemini-on';
-geminiAvailable=true;
-}else{
-status.textContent='Invalid Key';
-status.className='gemini-status gemini-off';
-geminiAvailable=false;
-}
-}catch(e){
-status.textContent='Connection Failed';
-status.className='gemini-status gemini-off';
-geminiAvailable=false;
-}
-}
+    function parseCSV(text) {
+      const lines = text.trim().split('\n');
+      const headers = lines[0].split(',').map(h => h.trim());
+      return lines.slice(1).map(line => {
+        const values = line.split(',').map(v => v.trim());
+        let row = {};
+        headers.forEach((h,i) => row[h] = values[i]);
+        return row;
+      });
+    }
 
-// Auto-test on load if key present
-if(apiKeyInput.value.trim())testApiKey();
+    function renderScores(data) {
+      scoresContainer.innerHTML = '';
+      const live = data.filter(m => m.Status && m.Status.toLowerCase() !== "upcoming");
+      if (!live.length) {
+        scoresContainer.innerHTML = '<p class="text-center text-gray-500">No live scores.</p>';
+        return;
+      }
+      live.forEach(s => {
+        scoresContainer.innerHTML += `
+          <div class="p-4 rounded-xl shadow-md bg-white hover:scale-[1.02] transition">
+            <div class="flex justify-between mb-4"><span class="font-bold">${s.TeamA}</span><span class="text-blue-600 font-extrabold">${s.ScoreA||''}</span></div>
+            <div class="flex justify-between mb-4"><span class="font-bold">${s.TeamB}</span><span class="text-blue-600 font-extrabold">${s.ScoreB||''}</span></div>
+            <p class="text-center text-xs text-gray-500">${s.Status||''}</p>
+          </div>`;
+      });
+    }
 
-// ==================== UPLOAD ====================
-const uploadZone=document.getElementById('uploadZone');
-const imageInput=document.getElementById('imageInput');
-uploadZone.addEventListener('click',()=>imageInput.click());
-uploadZone.addEventListener('dragover',e=>{e.preventDefault();uploadZone.classList.add('dragover')});
-uploadZone.addEventListener('dragleave',()=>uploadZone.classList.remove('dragover'));
-uploadZone.addEventListener('drop',e=>{
-e.preventDefault();uploadZone.classList.remove('dragover');
-if(e.dataTransfer.files[0]?.type.startsWith('image/'))handleImage(e.dataTransfer.files[0]);
-});
-imageInput.addEventListener('change',e=>{if(e.target.files[0])handleImage(e.target.files[0])});
+    function renderUpcoming(data) {
+      upcomingContainer.innerHTML = '';
+      const upcoming = data.filter(m => m.Status && m.Status.toLowerCase() === "upcoming");
+      if (!upcoming.length) {
+        upcomingContainer.innerHTML = '<p class="text-gray-500">No upcoming matches listed.</p>';
+        return;
+      }
+      upcoming.forEach(m => {
+        const dateStr = m.NextMatch ? new Date(m.NextMatch).toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric",weekday:"long"}) : "TBA";
+        upcomingContainer.innerHTML += `
+          <div class="p-4 rounded-lg bg-gray-50 shadow hover:scale-[1.02] transition">
+            <p class="font-bold">${m.TeamA} vs ${m.TeamB}</p>
+            <p class="text-sm text-gray-600">${dateStr}</p>
+          </div>`;
+      });
+    }
 
-function generateImageId(file){
-return file.name.replace(/[^a-zA-Z0-9]/g,'_')+'_'+file.size+'_'+Date.now();
-}
+    async function fetchScores() {
+      loadingIndicator.classList.remove('hidden');
+      try {
+        const res = await fetch(SCORES_URL);
+        const text = await res.text();
+        const data = parseCSV(text);
+        renderScores(data);
+        renderUpcoming(data);
+        lastUpdated.textContent = new Date().toLocaleString(undefined,{month:"long",day:"numeric",year:"numeric",weekday:"long",hour:"2-digit",minute:"2-digit"});
+      } catch {
+        errorMessage.classList.remove('hidden');
+      } finally {
+        loadingIndicator.classList.add('hidden');
+      }
+    }
 
-function handleImage(file){
-// Check if this is a new image vs returning to a saved one
-const newId=generateImageId(file);
-const savedId=localStorage.getItem('template_image_id');
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchScores();
+      setInterval(fetchScores, REFRESH_INTERVAL_MS);
+      setTimeout(() => {
+        document.getElementById("intro-screen").style.display = "none";
+        document.getElementById("page-content").classList.remove("opacity-0");
+      }, 3500);
+    });
 
-const reader=new FileReader();
-reader.onload=e=>{
-templateImage=new Image();
-templateImage.onload=()=>{
-canvas.width=templateImage.width;
-canvas.height=templateImage.height;
-currentScale=Math.min(560/templateImage.width,1);
-canvas.style.width=(templateImage.width*currentScale)+'px';
-canvas.style.height=(templateImage.height*currentScale)+'px';
-ctx.drawImage(templateImage,0,0);
-originalImageData=ctx.getImageData(0,0,canvas.width,canvas.height);
-drawCanvas();
-document.getElementById('uploadZone').classList.add('hidden');
-document.getElementById('canvasWrap').classList.remove('hidden');
-document.getElementById('autoDetectBtn').disabled=false;
-document.getElementById('fallbackBtn').disabled=false;
-document.getElementById('manualAddBtn').disabled=false;
-document.getElementById('previewCleanBtn').disabled=false;
-document.getElementById('saveTemplateBtn').disabled=false;
-document.getElementById('modeIndicator').textContent='Ready - click Auto-Detect';
-document.getElementById('detectHint').innerHTML='Image loaded. Click 
+    // Sidebar
+    const sidebar = document.getElementById("sidebar"), overlay = document.getElementById("overlay");
+    document.getElementById("open-nav").onclick = () => { sidebar.classList.add("active"); overlay.classList.remove("hidden"); };
+    document.getElementById("close-nav").onclick = () => { sidebar.classList.remove("active"); overlay.classList.add("hidden"); };
+    overlay.onclick = () => { sidebar.classList.remove("active"); overlay.classList.add("hidden"); };
+
+    // Theme toggle
+    const themeToggle = document.getElementById("theme-toggle");
+    themeToggle.onclick = () => {
+      document.documentElement.classList.toggle("dark");
+      const icon = themeToggle.querySelector("i");
+      icon.setAttribute("data-lucide", document.documentElement.classList.contains("dark") ? "sun" : "moon");
+      lucide.createIcons();
+    };
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>
