@@ -1,448 +1,375 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="dark">
+
+html_code = '''<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Tadokk - Boutique digital engineering agency specializing in Facebook ad architectures, affiliate systems, agro-logistics engineering and high-performance digital ecosystems">
-    <title>Tadokk | Digital Engineering & Architecture</title>
-    <link rel="icon" type="image/png" href="logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #6366f1;
-            --secondary: #3b82f6;
-            --accent: #a855f7;
-            --bg: #fff;
-            --text: #1e293b;
-            --card-bg: #f8fafc;
-            --border: #e2e8f0;
-            --nav-glass: rgba(255,255,255,.9);
-            --overlay: rgba(0,0,0,.1);
-            --social-color: var(--text);
-        }
-        [data-theme="dark"] {
-            --bg: #050810;
-            --text: #f1f5f9;
-            --card-bg: #0f172a;
-            --border: rgba(255,255,255,.08);
-            --nav-glass: rgba(5,8,16,.9);
-            --overlay: rgba(0,0,0,.8);
-            --social-color: #f1f5f9;
-        }
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
-        body { background:var(--bg); color:var(--text); transition:.4s; overflow-x:hidden; }
-        header { position:fixed; top:0; width:100%; z-index:1000; background:var(--nav-glass); backdrop-filter:blur(15px); border-bottom:1px solid var(--border); }
-        .navbar { max-width:1400px; margin:0 auto; height:80px; display:flex; align-items:center; padding:0 20px; justify-content:space-between; }
-        .menu-trigger { cursor:pointer; font-size:1.6rem; color:var(--primary); margin-left:25px; transition:.3s; }
-        .menu-trigger:hover { transform:scale(1.1); color:var(--accent); }
-        .logo-box { display:flex; align-items:center; gap:12px; }
-        .logo-box img { height:42px; border-radius:8px; }
-        .logo-box span { font-weight:800; font-size:1.5rem; letter-spacing:-1px; color:var(--text); }
-        .side-nav { position:fixed; top:0; right:-450px; width:380px; height:100vh; background:var(--card-bg); z-index:1050; padding:40px; display:flex; flex-direction:column; transition:.6s cubic-bezier(.85,0,.15,1); border-left:1px solid var(--border); box-shadow:-20px 0 50px rgba(0,0,0,.5); }
-        .side-nav.open { right:0; }
-        .nav-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:50px; }
-        .theme-toggle-btn { background:none; border:none; font-size:1.9rem; color:var(--primary); cursor:pointer; padding:10px; border-radius:12px; transition:all .3s; }
-        .theme-toggle-btn:hover { background:var(--border); color:var(--accent); transform:rotate(30deg); }
-        .close-nav { font-size:1.8rem; cursor:pointer; color:var(--primary); }
-        .side-nav a { text-decoration:none; color:var(--text); font-size:1.4rem; font-weight:700; margin-bottom:25px; transition:.3s; display:block; }
-        .side-nav a:hover { color:var(--primary); padding-left:15px; }
-        #body-overlay { position:fixed; inset:0; background:var(--overlay); backdrop-filter:blur(8px); z-index:1040; opacity:0; pointer-events:none; transition:.4s; }
-        #body-overlay.active { opacity:1; pointer-events:auto; }
-
-        /* ── Gallery ───────────────────────────────────────────────────────── */
-        .gallery-container { 
-            display: flex; 
-            gap: 12px; 
-            width: 100%; 
-            height: 520px; 
-            padding: 0 5%; 
-            margin-top: 60px; 
-            max-width: 1400px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .gallery-slide { 
-            flex: 1;
-            height: 100%;
-            border-radius: 30px;
-            background-size: cover;
-            background-position: center;
-            transition: all .8s cubic-bezier(.25,1,.5,1);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            filter: saturate(0.6);
-            border: 1px solid var(--border);
-        }
-        .gallery-slide:hover { 
-            flex: 5; 
-            filter: saturate(1.1); 
-            border-color: var(--primary); 
-        }
-        .gallery-slide .caption { 
-            position: absolute;
-            bottom: 30px;
-            left: 30px;
-            opacity: 0;
-            transition: all .45s;
-            transform: translateY(20px);
-            background: rgba(0,0,0,.65);
-            backdrop-filter: blur(8px);
-            padding: 14px 20px;
-            border-radius: 14px;
-            color: #fff;
-            mix-blend-mode: difference;
-            isolation: isolate;
-            pointer-events: none;
-        }
-        .gallery-slide:hover .caption { 
-            opacity: 1; 
-            transform: translateY(0); 
-        }
-
-        .ticker-wrap { width:100%; overflow:hidden; background:var(--card-bg); padding:60px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
-        .ticker-move { display:flex; width:max-content; animation:ticker 25s linear infinite; }
-        .ticker-move:hover { animation-play-state:paused; }
-        .testimonial-box { width:400px; padding:40px; margin:0 20px; background:var(--bg); border-radius:24px; border:1px solid var(--border); display:flex; align-items:center; gap:25px; }
-        .testimonial-box img { width:80px; height:80px; border-radius:50%; object-fit:cover; flex-shrink:0; }
-        .testimonial-box .quote { flex:1; }
-        @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-
-        #featured-gallery { padding:140px 5% 100px; background:linear-gradient(135deg,var(--card-bg) 0%,rgba(99,102,241,.08) 100%); position:relative; }
-        .carousel-container { position:relative; overflow:hidden; padding:40px 0; }
-        .carousel-track { display:flex; gap:30px; transition: transform 0.6s ease; }
-        .carousel-card { flex:0 0 380px; height:520px; background:var(--card-bg); border-radius:24px; overflow:hidden; border:1px solid var(--border); transition:all .5s cubic-bezier(.34,1.56,.64,1); }
-        .carousel-card:hover { transform:scale(1.08) translateY(-15px) rotate(1.5deg); box-shadow:0 25px 60px rgba(99,102,241,.25); border-color:var(--primary); }
-        .card-image { height:60%; background-size:cover; background-position:center; position:relative; }
-        .card-image::after { content:''; position:absolute; inset:0; background:linear-gradient(to top,rgba(0,0,0,.65) 0%,transparent 60%); }
-        .card-content { padding:24px; text-align:center; }
-        .card-content h3 { font-size:1.5rem; margin-bottom:12px; color:var(--primary); }
-        .card-content p { opacity:.75; font-size:1rem; line-height:1.5; }
-        .carousel-control { position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,.5); color:#fff; border:none; width:60px; height:60px; border-radius:50%; font-size:1.6rem; cursor:pointer; display:flex; align-items:center; justify-content:center; opacity:.7; transition:all .3s; backdrop-filter:blur(8px); z-index:10; }
-        .carousel-control:hover { background:var(--primary); opacity:1; transform:translateY(-50%) scale(1.15); }
-        .carousel-control.prev { left:20px; }
-        .carousel-control.next { right:20px; }
-
-        section { padding:120px 5%; max-width:1400px; margin:0 auto; }
-        .flex-hero {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 60px;
-            min-height: 80vh;
-        }
-        .hero-text { flex: 1 1 45%; max-width: 600px; }
-        .hero-image { flex: 1 1 45%; max-width: 50%; }
-        .hero-image img { width: 100%; height: auto; max-height: 600px; object-fit: contain; }
-        .grid-services { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:30px; }
-        .bento-card { background:var(--card-bg); padding:50px; border-radius:35px; border:1px solid var(--border); transition:.5s cubic-bezier(.4,0,.2,1); position:relative; overflow:hidden; }
-        .bento-card:hover { transform:translateY(-15px); border-color:var(--primary); background:linear-gradient(var(--card-bg),var(--bg)); }
-        .lazy-reveal { opacity:0; transform:translateY(40px); transition:1s all ease-out; }
-        .lazy-reveal.active { opacity:1; transform:translateY(0); }
-        .btn { background:var(--primary); color:#fff; padding:18px 36px; border-radius:15px; font-weight:800; text-decoration:none; display:inline-block; transition:.4s; border:none; box-shadow:0 10px 20px rgba(99,102,241,.2); }
-        .btn:hover { background:var(--accent); transform:translateY(-3px); box-shadow:0 15px 30px rgba(168,85,247,.3); }
-        footer { background:var(--card-bg); padding:100px 5% 50px; border-top:1px solid var(--border); }
-        .footer-flex { display:flex; flex-wrap:wrap; justify-content:space-between; gap:60px; margin-bottom:80px; }
-        .footer-col { flex:1 1 250px; }
-        .footer-col h4 { margin-bottom:30px; font-size:1.1rem; color:var(--primary); text-transform:uppercase; letter-spacing:2px; }
-        .footer-col ul { list-style:none; }
-        .footer-col li { margin-bottom:15px; opacity:.6; transition:.3s; cursor:pointer; }
-        .footer-col li:hover { opacity:1; color:var(--primary); padding-left:10px; }
-        .socials { display:flex; gap:24px; font-size:1.8rem; margin-top:20px; flex-wrap:wrap; }
-        .socials a { color:var(--social-color); transition:.3s; }
-        .socials a:hover { opacity:.8; transform:scale(1.15); }
-
-        /* ── RESPONSIVE Gallery fixes ─────────────────────────────────────── */
-        @media (max-width: 1100px) {
-            .flex-hero { flex-direction: column; text-align: center; }
-            .hero-text, .hero-image { max-width: 100%; flex: 1 1 100%; }
-            .hero-image { margin-top: 40px; }
-
-            .gallery-container { 
-                flex-direction: column; 
-                height: auto; 
-                gap: 20px; 
-                padding: 0 16px; 
-                margin-top: 40px;
-            }
-            .gallery-slide { 
-                height: 400px; 
-                flex: unset !important; 
-                filter: saturate(0.85); 
-            }
-            .gallery-slide:hover { 
-                flex: unset !important; 
-                transform: scale(1.04); 
-                filter: saturate(1.1); 
-            }
-        }
-
-        @media (max-width: 768px) {
-            .gallery-slide { height: 340px; border-radius: 20px; }
-            .gallery-slide .caption {
-                bottom: 20px;
-                left: 20px;
-                right: 20px;
-                padding: 12px 16px;
-                font-size: 0.95rem;
-            }
-        }
-
-        @media (max-width: 900px) {
-            .side-nav { width:320px; }
-            .carousel-card { flex:0 0 320px; height:460px; }
-            .carousel-control { width:50px; height:50px; font-size:1.3rem; }
-        }
-
-        @media (max-width: 600px) {
-            .carousel-card { flex:0 0 85vw; height:440px; }
-            .carousel-control { opacity:.9; }
-            .testimonial-box { width:320px; flex-direction:column; text-align:center; padding:30px; }
-            .testimonial-box img { margin-bottom:15px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoDetect Template Filler - Gemini Powered</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0a0e17;color:#e2e8f0;min-height:100vh;line-height:1.5}
+.container{max-width:1520px;margin:0 auto;padding:14px}
+header{text-align:center;padding:16px 0;border-bottom:1px solid #1e293b;margin-bottom:16px}
+h1{font-size:1.7rem;background:linear-gradient(90deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.subtitle{color:#475569;font-size:.92rem;margin-top:4px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:1000px){.grid{grid-template-columns:1fr}}
+.card{background:#111827;border-radius:12px;padding:18px;border:1px solid #1e293b}
+.card h2{font-size:1.05rem;margin-bottom:12px;color:#94a3b8;display:flex;align-items:center;gap:8px}
+.upload-zone{border:2px dashed #334155;border-radius:10px;padding:30px;text-align:center;cursor:pointer;transition:all .3s;background:#0a0e17}
+.upload-zone:hover,.upload-zone.dragover{border-color:#3b82f6;background:#111827}
+.upload-zone input{display:none}
+.upload-zone .icon{font-size:2.2rem;margin-bottom:6px}
+.upload-zone p{font-size:.9rem}
+.upload-zone .sub{font-size:.78rem;color:#475569;margin-top:4px}
+.canvas-wrap{position:relative;background:#0a0e17;border-radius:8px;overflow:hidden;border:1px solid #1e293b;display:inline-block;user-select:none;touch-action:none}
+canvas{display:block;cursor:crosshair}
+.controls{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
+button{background:#2563eb;color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.85rem;font-weight:500;transition:all .2s}
+button:hover{background:#1d4ed8}
+button.secondary{background:#374151}
+button.secondary:hover{background:#4b5563}
+button.success{background:#059669}
+button.success:hover{background:#047857}
+button.danger{background:#dc2626}
+button.danger:hover{background:#b91c1c}
+button:disabled{opacity:.4;cursor:not-allowed}
+button.small{padding:5px 10px;font-size:.78rem}
+.detect-panel{background:#0a0e17;border-radius:8px;padding:14px;border:1px solid #1e293b;margin-top:12px}
+.detect-panel h3{font-size:.95rem;color:#e2e8f0;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.detect-panel .detect-count{background:#1e3a5f;color:#60a5fa;padding:2px 8px;border-radius:10px;font-size:.75rem}
+.detect-list{max-height:320px;overflow-y:auto}
+.detect-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#111827;border-radius:8px;margin-bottom:8px;border:1px solid #1e293b;cursor:pointer;transition:all .2s}
+.detect-item:hover{border-color:#3b82f6;background:#1e293b}
+.detect-item.selected{border-color:#10b981;background:#064e3b15}
+.detect-item input[type=checkbox]{width:18px;height:18px;accent-color:#10b981;cursor:pointer;flex-shrink:0}
+.detect-item .detect-preview{width:48px;height:36px;border-radius:4px;border:1px solid #334155;background:#0a0e17;flex-shrink:0;object-fit:contain}
+.detect-item .detect-info{flex:1;min-width:0}
+.detect-item .detect-info .name{font-size:.88rem;color:#e2e8f0;font-weight:500}
+.detect-item .detect-info .meta{font-size:.75rem;color:#64748b;margin-top:2px}
+.detect-item .detect-type{font-size:.7rem;padding:2px 8px;border-radius:10px;font-weight:600;flex-shrink:0}
+.type-text{background:#1e3a5f;color:#60a5fa}
+.type-image{background:#3f1e5f;color:#c084fc}
+.type-icon{background:#1e3a1e;color:#4ade80}
+.type-signature{background:#5f1e1e;color:#f87171}
+.detect-actions{display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid #1e293b}
+.field-list{max-height:380px;overflow-y:auto}
+.field-card{background:#0a0e17;border-radius:8px;padding:12px;margin-bottom:8px;border:1px solid #1e293b;border-left:3px solid #3b82f6}
+.field-card.selected{border-left-color:#10b981;background:#064e3b12}
+.field-card .field-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.field-card .field-header strong{color:#60a5fa;min-width:18px}
+.field-card input[type=text]{flex:1;min-width:80px;background:#1e293b;border:1px solid #334155;color:#fff;padding:5px 10px;border-radius:5px;font-size:.85rem}
+.field-card .field-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.field-card .field-grid>div{display:flex;align-items:center;gap:5px}
+.field-card label{font-size:.74rem;color:#64748b;white-space:nowrap}
+.field-card input[type=number]{width:52px;background:#1e293b;border:1px solid #334155;color:#fff;padding:4px;border-radius:5px;font-size:.8rem}
+.field-card input[type=color]{width:32px;height:24px;border:none;border-radius:4px;cursor:pointer}
+.field-card .actions{display:flex;gap:5px;margin-top:8px}
+.field-card .actions button{padding:4px 8px;font-size:.75rem}
+.field-card .clean-toggle{display:flex;align-items:center;gap:5px;font-size:.76rem;color:#94a3b8}
+.field-card .clean-toggle input{width:14px;height:14px}
+.spreadsheet{overflow-x:auto;margin-top:12px}
+table{width:100%;border-collapse:collapse;font-size:.84rem;min-width:500px}
+th,td{padding:7px 9px;text-align:left;border:1px solid #1e293b}
+th{background:#111827;color:#94a3b8;font-weight:600;position:sticky;top:0}
+td{background:#0a0e17}
+td input{width:100%;background:transparent;border:none;color:#e2e8f0;padding:3px;font-size:.84rem}
+td input:focus{outline:2px solid #2563eb;border-radius:3px}
+.row-actions{display:flex;gap:3px}
+.row-actions button{padding:3px 6px;font-size:.7rem}
+.progress-container{display:none;margin-top:14px;padding:14px;background:#111827;border-radius:10px;border:1px solid #1e293b}
+.progress-bar{width:100%;height:16px;background:#1e293b;border-radius:8px;overflow:hidden;margin-top:6px}
+.progress-fill{height:100%;background:linear-gradient(90deg,#2563eb,#7c3aed);width:0%;transition:width .3s;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-top:14px}
+.gallery-item{background:#111827;border-radius:10px;overflow:hidden;border:1px solid #1e293b;transition:transform .2s;position:relative}
+.gallery-item:hover{transform:scale(1.02)}
+.gallery-item img{width:100%;height:130px;object-fit:cover;display:block}
+.gallery-item .info{padding:7px;font-size:.75rem;color:#64748b}
+.gallery-item .dl-btn{position:absolute;top:5px;right:5px;background:rgba(0,0,0,.75);color:#fff;border:none;padding:4px 7px;border-radius:5px;cursor:pointer;font-size:.7rem}
+.instructions{background:#111827;border-left:3px solid #2563eb;padding:12px;border-radius:0 8px 8px 0;margin-bottom:14px;font-size:.85rem;line-height:1.6;color:#94a3b8}
+.instructions code{background:#0a0e17;padding:2px 5px;border-radius:4px;font-family:monospace;color:#60a5fa}
+.instructions strong{color:#e2e8f0}
+.hidden{display:none!important}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:600}
+.badge-blue{background:#1e3a5f;color:#60a5fa}
+.badge-green{background:#064e3b;color:#34d399}
+.badge-purple{background:#3f1e5f;color:#c084fc}
+.badge-amber{background:#5f3f1e;color:#fbbf24}
+.mode-indicator{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.7);color:#fbbf24;padding:3px 10px;border-radius:5px;font-size:.75rem;font-weight:600;pointer-events:none;z-index:10}
+.hint-bar{background:#1e3a5f;color:#93c5fd;padding:7px 12px;border-radius:6px;font-size:.8rem;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.empty-state{color:#475569;text-align:center;padding:24px;font-size:.88rem}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:2000}
+.modal-overlay.active{display:flex}
+.modal{background:#111827;border-radius:14px;padding:18px;max-width:90vw;max-height:90vh;overflow:auto;border:1px solid #1e293b}
+.modal h3{margin-bottom:12px;color:#e2e8f0}
+.modal canvas{max-width:100%;border-radius:6px;border:1px solid #1e293b}
+.modal .close-btn{float:right;background:#374151;padding:5px 12px;font-size:.78rem}
+.img-cell{display:flex;align-items:center;gap:6px}
+.img-cell img{height:28px;width:28px;object-fit:cover;border-radius:4px;border:1px solid #334155}
+.img-cell .img-name{font-size:.75rem;color:#94a3b8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:80px}
+.img-cell button{background:#374151;padding:3px 8px;font-size:.7rem}
+.template-saved{background:#064e3b;color:#34d399;padding:6px 12px;border-radius:6px;font-size:.8rem;margin-top:8px;display:none;align-items:center;gap:6px}
+.template-saved.active{display:flex}
+.gemini-status{padding:4px 10px;border-radius:10px;font-size:.72rem;font-weight:600;margin-left:auto}
+.gemini-on{background:#064e3b;color:#34d399}
+.gemini-off{background:#5f1e1e;color:#f87171}
+.api-key-input{background:#1e293b;border:1px solid #334155;color:#fff;padding:6px 10px;border-radius:5px;font-size:.8rem;width:280px}
+.settings-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.loading-spinner{display:inline-block;width:14px;height:14px;border:2px solid #334155;border-top-color:#60a5fa;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.merge-slider{width:120px}
+.confidence-badge{font-size:.65rem;padding:1px 6px;border-radius:8px;margin-left:4px}
+.conf-high{background:#064e3b;color:#34d399}
+.conf-med{background:#5f3f1e;color:#fbbf24}
+.conf-low{background:#5f1e1e;color:#f87171}
+</style>
 </head>
 <body>
-<div id="body-overlay"></div>
+<div class="container">
 <header>
-    <div class="navbar">
-        <div class="logo-box">
-            <img src="logo.png" alt="Tadokk Logo">
-            <span>Tadokk</span>
-        </div>
-        <div class="menu-trigger" onclick="toggleNav()"><i class="fas fa-bars-staggered"></i></div>
-    </div>
+<h1>AutoDetect Template Filler</h1>
+<p class="subtitle">Gemini Vision-powered field detection • Smart text merging • Template persistence</p>
 </header>
 
-<aside class="side-nav" id="sideNav">
-    <div class="nav-header">
-        <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle theme"><i class="fas fa-circle-half-stroke"></i></button>
-        <span style="font-weight:800;opacity:.5">Tadokk >>></span>
-        <div class="close-nav" onclick="toggleNav()"><i class="fas fa-times"></i></div>
-    </div>
-    <a href="#home">Architecture</a>
-    <a href="#projects">The Portfolio</a>
-    <a href="#services">Digital Ecosystem</a>
-    <a href="#testimonials">Reputation</a>
-    <a href="#status">System Status</a>
-</aside>
+<div class="instructions">
+<strong>Workflow:</strong>
+<ol style="margin-left:18px;margin-top:4px">
+<li>Upload a template image</li>
+<li>Click <strong>Auto-Detect with Gemini</strong> for intelligent field recognition</li>
+<li><strong>Tick checkboxes</strong> to select fields you want</li>
+<li>Click <strong>Apply Selected</strong> — they become spreadsheet columns</li>
+<li><strong>Drag</strong> boxes to move. <strong>Drag green handles</strong> to resize</li>
+<li>Image fields accept image uploads in spreadsheet cells</li>
+<li>Fill data and <strong>Render All</strong></li>
+<li><strong>Save Template</strong> to persist your work</li>
+</ol>
+</div>
 
-<main>
-    <section class="flex-hero" id="home">
-        <div class="hero-text" data-aos="fade-right">
-            <h1 class="lazy-reveal">Engineering <br> High-Stakes <br> Digital Growth.</h1>
-            <p style="font-size:1.3rem;opacity:.7;margin-bottom:40px;max-width:600px">Tadokk is a boutique agency specializing in Facebook ad architectures, affiliate systems, and agro-logistics engineering.</p>
-            <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;">
-                <a href="#services" class="btn">Our Ecosystem</a>
-                <a href="#status" class="btn" style="background:transparent;border:2px solid var(--primary);color:var(--primary)">View Terminal</a>
-            </div>
-        </div>
-        <div class="hero-image lazy-reveal" data-aos="zoom-in">
-            <img src="doodle.png" alt="Software engineering illustration">
-        </div>
-    </section>
+<!-- API Key & Settings -->
+<div class="card" style="margin-bottom:14px">
+<h2>🔧 Settings</h2>
+<div class="settings-row">
+<label style="font-size:.85rem;color:#94a3b8">Gemini API Key:</label>
+<input type="password" id="apiKeyInput" class="api-key-input" placeholder="Enter Gemini API Key..." value="AIzaSyCyD2IgrkRij6TbfV8we0KKHJxbviScJAc">
+<button onclick="testApiKey()" class="small secondary">Test</button>
+<span class="gemini-status gemini-off" id="geminiStatus">Not Connected</span>
+</div>
+<div class="settings-row">
+<label style="font-size:.85rem;color:#94a3b8">Text Merge Distance:</label>
+<input type="range" id="mergeDistance" class="merge-slider" min="20" max="150" value="60">
+<span id="mergeValue" style="font-size:.8rem;color:#60a5fa;min-width:30px">60px</span>
+<label style="font-size:.85rem;color:#94a3b8;margin-left:20px">Min Field Size:</label>
+<input type="range" id="minFieldSize" class="merge-slider" min="20" max="100" value="30">
+<span id="minSizeValue" style="font-size:.8rem;color:#60a5fa;min-width:30px">30px</span>
+</div>
+</div>
 
-    <section id="projects">
-        <h2 class="lazy-reveal" style="font-size:3rem;margin-bottom:50px;text-align:center">Architectural Portfolio</h2>
-        <div class="gallery-container">
-            <div class="gallery-slide" style="background-image:url('https://images.unsplash.com/photo-1551288049-bbbda536339a?q=80&w=2070')">
-                <div class="caption"><h3>Data Architecture</h3><p>Affiliate tracking systems.</p></div>
-            </div>
-            <div class="gallery-slide" style="background-image:url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015')">
-                <div class="caption"><h3>Ad Mechanics</h3><p>Meta Ads Scaling.</p></div>
-            </div>
-            <div class="gallery-slide" style="background-image:url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?q=80&w=2070')">
-                <div class="caption"><h3>Agro Logistics</h3><p>Tadokk Farms Bridge.</p></div>
-            </div>
-            <div class="gallery-slide" style="background-image:url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070')">
-                <div class="caption"><h3>Fullstack Dev</h3><p>Custom Engineering.</p></div>
-            </div>
-        </div>
-    </section>
+<div class="grid">
+<!-- LEFT -->
+<div>
+<div class="card">
+<h2>Upload Template</h2>
+<div class="upload-zone" id="uploadZone">
+<input type="file" id="imageInput" accept="image/*">
+<div class="icon">📁</div>
+<p>Drop image or click to browse</p>
+<p class="sub">JPG, PNG, WEBP, GIF</p>
+</div>
+<div class="canvas-wrap hidden" id="canvasWrap" style="margin-top:12px">
+<div class="mode-indicator" id="modeIndicator">Click "Auto-Detect" to find fields</div>
+<canvas id="templateCanvas"></canvas>
+</div>
+<div class="controls">
+<button onclick="autoDetectWithGemini()" id="autoDetectBtn" disabled>
+<span id="detectBtnText">Auto-Detect with Gemini</span>
+</button>
+<button onclick="autoDetectFallback()" class="secondary" id="fallbackBtn" disabled>Fallback (Local)</button>
+<button onclick="addManualField()" class="secondary" id="manualAddBtn" disabled>Add Manual</button>
+<button onclick="clearAllFields()" class="danger">Clear All</button>
+<button onclick="previewClean()" class="secondary" id="previewCleanBtn" disabled>Preview Clean</button>
+</div>
+<div class="template-saved" id="templateSaved">
+<span>✓</span> Template saved! Will auto-load on return.
+</div>
+<div class="controls" style="margin-top:8px">
+<button onclick="saveTemplate()" class="success" id="saveTemplateBtn" disabled>💾 Save Template</button>
+<button onclick="loadSavedTemplate()" class="secondary" id="loadTemplateBtn">📂 Load Saved</button>
+<button onclick="clearSavedTemplate()" class="danger small">Clear Cache</button>
+</div>
+</div>
 
-    <section id="featured-gallery">
-        <h2 class="lazy-reveal" style="font-size:3rem;text-align:center;margin-bottom:70px">Featured Works <span style="font-size:1.4rem;opacity:.6">· Interactive Showcase</span></h2>
-        <div class="carousel-container">
-            <div class="carousel-track" id="carouselTrack">
-                <!-- Original items -->
-                <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1558494949-ef0d8a7b0a0e?q=80&w=1974')"></div><div class="card-content"><h3>Enterprise Ad Pipeline</h3><p>Automated scaling system handling 7-figure daily spend</p></div></div>
-                <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=2070')"></div><div class="card-content"><h3>Agro-Chain Dashboard</h3><p>Real-time logistics & yield prediction</p></div></div>
-                <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070')"></div><div class="card-content"><h3>Performance Terminal</h3><p>Custom analytics & monitoring suite</p></div></div>
-                <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2074')"></div><div class="card-content"><h3>Affiliate Architecture</h3><p>Multi-layer tracking & fraud prevention</p></div></div>
-                <!-- Duplicated items for seamless infinite scroll -->
-                <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1558494949-ef0d8a7b0a0e?q=80&w=1974')"></div><div class="card-content"><h3>Enterprise Ad Pipeline</h3><p>Automated scaling system handling 7-figure daily spend</p></div></div>
-                <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=2070')"></div><div class="card-content"><h3>Agro-Chain Dashboard</h3><p>Real-time logistics & yield prediction</p></div></div>
-                <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070')"></div><div class="card-content"><h3>Performance Terminal</h3><p>Custom analytics & monitoring suite</p></div></div>
-                <div class="carousel-card"><div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2074')"></div><div class="card-content"><h3>Affiliate Architecture</h3><p>Multi-layer tracking & fraud prevention</p></div></div>
-            </div>
-            <button class="carousel-control prev" onclick="moveCarousel(-1)" title="Previous"><i class="fas fa-chevron-left"></i></button>
-            <button class="carousel-control next" onclick="moveCarousel(1)" title="Next"><i class="fas fa-chevron-right"></i></button>
-        </div>
-    </section>
+<div class="card" style="margin-top:14px">
+<h2>Detected Regions <span class="detect-count" id="detectCount">0 found</span></h2>
+<div class="hint-bar" id="detectHint">Upload an image and click Auto-Detect with Gemini.</div>
+<div class="detect-list" id="detectList">
+<div class="empty-state">No detections yet.</div>
+</div>
+<div class="detect-actions" id="detectActions" style="display:none">
+<button onclick="selectAllDetections()" class="small">Select All</button>
+<button onclick="deselectAllDetections()" class="small secondary">Deselect All</button>
+<button onclick="applySelectedDetections()" class="success small">Apply Selected</button>
+</div>
+</div>
+</div>
 
-    <section id="services">
-        <div class="grid-services">
-            <div class="bento-card lazy-reveal"><i class="fab fa-facebook-square" style="font-size:3rem;color:var(--primary)"></i><h3 style="margin-top:25px;font-size:1.8rem">Ad Management</h3><p style="margin-top:15px;opacity:.7">We manage over ₦50M+ in ad spend with proprietary scaling methodologies.</p></div>
-            <div class="bento-card lazy-reveal"><i class="fas fa-trophy" style="font-size:3rem;color:#f59e0b"></i><h3 style="margin-top:25px;font-size:1.8rem">CHS League</h3><p style="margin-top:15px;opacity:.7">Real-time statistics engine for the 200 Level CHS sports season.</p><a href="Livescores.html" style="color:var(--primary);display:block;margin-top:20px;font-weight:700">Live Table →</a></div>
-            <div class="bento-card lazy-reveal"><i class="fas fa-rocket" style="font-size:3rem;color:var(--accent)"></i><h3 style="margin-top:25px;font-size:1.8rem">IBE Launchpad</h3><div id="countdown" style="font-size:2rem;font-weight:800;color:var(--primary);margin:15px 0"></div><p style="opacity:.7">The global launch of the IBE Automated system.</p></div>
-        </div>
-    </section>
+<!-- RIGHT -->
+<div>
+<div class="card">
+<h2>Selected Fields (<span id="fieldCount">0</span>) <span class="badge badge-green">Active</span></h2>
+<div class="hint-bar" id="fieldHint">Select fields from detection results. Only selected fields appear here and in the spreadsheet.</div>
+<div class="field-list" id="fieldList">
+<div class="empty-state">No fields selected yet.</div>
+</div>
+</div>
 
-    <section id="testimonials" style="max-width:100%;padding:0">
-        <div class="ticker-wrap">
-            <div class="ticker-move">
-                <div class="testimonial-box">
-                    <img src="testimonialimg/1.jpg" alt="Client X">
-                    <div class="quote">"Tadokk's ad strategy increased our ROI by 400% in 3 months." <strong>- Client X</strong></div>
-                </div>
-                <div class="testimonial-box">
-                    <img src="testimonialimg/2.jpg" alt="Dev Lead">
-                    <div class="quote">"The most transparent and technically sound agency in the region." <strong>- Dev Lead</strong></div>
-                </div>
-                <div class="testimonial-box">
-                    <img src="testimonialimg/3.jpg" alt="Farm Partner">
-                    <div class="quote">"Flawless integration between physical logistics and digital sales." <strong>- Farm Partner</strong></div>
-                </div>
-                <!-- Duplicated for seamless loop -->
-                <div class="testimonial-box">
-                    <img src="testimonialimg/1.jpg" alt="Client X">
-                    <div class="quote">"Tadokk's ad strategy increased our ROI by 400% in 3 months." <strong>- Client X</strong></div>
-                </div>
-                <div class="testimonial-box">
-                    <img src="testimonialimg/2.jpg" alt="Dev Lead">
-                    <div class="quote">"The most transparent and technically sound agency in the region." <strong>- Dev Lead</strong></div>
-                </div>
-                <div class="testimonial-box">
-                    <img src="testimonialimg/3.jpg" alt="Farm Partner">
-                    <div class="quote">"Flawless integration between physical logistics and digital sales." <strong>- Farm Partner</strong></div>
-                </div>
-            </div>
-        </div>
-    </section>
+<div class="card" style="margin-top:14px">
+<h2>Data Spreadsheet</h2>
+<div class="controls" style="margin-bottom:12px">
+<button onclick="addRow()">Add Row</button>
+<button onclick="deleteLastRow()" class="danger">Remove Last</button>
+<button onclick="exportToExcel()" class="success">Excel</button>
+<button onclick="importFromExcel()" class="secondary">Import</button>
+<input type="file" id="excelInput" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleExcelImport(this)">
+</div>
+<div class="spreadsheet">
+<table id="dataTable">
+<thead><tr id="headerRow"><th>#</th><th>Actions</th></tr></thead>
+<tbody id="tableBody"></tbody>
+</table>
+</div>
+</div>
 
-    <section id="status">
-        <h2 class="lazy-reveal" style="margin-bottom:30px">System Status Logs</h2>
-        <div class="terminal-box" id="terminal">
-            <div>> [SYSTEM] Initializing Tadokk Core...</div>
-            <div>> [AUTH] Jerome Tersugh Logged In.</div>
-            <div>> [ADS] Meta API Handshake Successful.</div>
-            <div>> [LOGS] Monitoring CHS League Live Feed...</div>
-        </div>
-    </section>
-</main>
+<div class="card" style="margin-top:14px">
+<h2>Render Output</h2>
+<div class="controls">
+<button onclick="renderAll()" class="success" style="font-size:.95rem;padding:11px 22px">Render All</button>
+<button onclick="downloadAll()" class="secondary" id="downloadBtn" disabled>Download All</button>
+<button onclick="clearGallery()" class="danger">Clear Gallery</button>
+</div>
+<div class="progress-container" id="progressContainer">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<span id="progressText">Rendering...</span><span id="progressPercent">0%</span>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill">0%</div></div>
+</div>
+<div class="gallery" id="gallery"></div>
+</div>
+</div>
+</div>
+</div>
 
-<footer>
-    <div class="footer-flex">
-        <div class="footer-col">
-            <div class="logo-box">
-                <img src="logo.png" alt="">
-                <span>Tadokk</span>
-            </div>
-            <p style="margin-top:25px;opacity:.7">Crafting digital ecosystems where marketing meets high-end engineering. Based in Nigeria, serving the globe.</p>
-        </div>
-        <div class="footer-col">
-            <h4>Core Systems</h4>
-            <ul><li>Paid Traffic Architecture</li><li>Affiliate Engines</li><li>Agro-Tech Logistics</li><li>Web Solutions</li></ul>
-        </div>
-        <div class="footer-col">
-            <h4>Legal & Social</h4>
-            <ul><li>Privacy Protocol</li><li>Terms of Service</li></ul>
-            <div class="socials">
-                <a href="https://wa.me/2347013111767" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                <a href="https://www.facebook.com/share/1Eog7kFNNb/" title="Facebook"><i class="fab fa-facebook"></i></a>
-                <a href="https://x.com" title="X/Twitter"><i class="fab fa-x-twitter"></i></a>
-                <a href="https://instagram.com" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://linkedin.com" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                <a href="https://github.com" title="GitHub"><i class="fab fa-github"></i></a>
-                <a href="mailto:jerometersugh9@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
-            </div>
-        </div>
-    </div>
-    <p style="text-align:center;opacity:.4;font-size:.8rem;border-top:1px solid var(--border);padding-top:40px">© 2026 Tadokk. All Rights Reserved.</p>
-</footer>
+<input type="file" id="cellImageInput" accept="image/*" style="display:none">
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+<div class="modal" onclick="event.stopPropagation()">
+<button class="close-btn" onclick="closeModal()">Close</button>
+<h3>Clean Preview</h3>
+<canvas id="modalCanvas"></canvas>
+</div>
+</div>
 
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
-AOS.init();
+// ==================== STATE ====================
+let templateImage=null,originalImageData=null;
+let detections=[];
+let detectionIdCounter=0;
+let fields=[];
+let fieldIdCounter=0;
+let renderedImages=[];
+let currentScale=1;
+let isDragging=false,dragField=null,dragMode=null;
+let dragStartX=0,dragStartY=0,dragStartField=null;
+const HANDLE_SIZE=10;
+let pendingImageCell=null;
+let currentImageId=null; // Unique ID for current image
+let geminiAvailable=false;
 
-const sideNav = document.getElementById('sideNav');
-const overlay = document.getElementById('body-overlay');
+const canvas=document.getElementById('templateCanvas');
+const ctx=canvas.getContext('2d',{willReadFrequently:true});
+const cellImageInput=document.getElementById('cellImageInput');
 
-function toggleNav() {
-    sideNav.classList.toggle('open');
-    overlay.classList.toggle('active');
-}
+// ==================== SETTINGS ====================
+const apiKeyInput=document.getElementById('apiKeyInput');
+const mergeDistanceSlider=document.getElementById('mergeDistance');
+const minFieldSizeSlider=document.getElementById('minFieldSize');
 
-document.addEventListener('click', e => {
-    if (sideNav.classList.contains('open') && 
-        !sideNav.contains(e.target) && 
-        !e.target.closest('.menu-trigger')) {
-        toggleNav();
-    }
+mergeDistanceSlider.addEventListener('input',e=>{
+document.getElementById('mergeValue').textContent=e.target.value+'px';
+});
+minFieldSizeSlider.addEventListener('input',e=>{
+document.getElementById('minSizeValue').textContent=e.target.value+'px';
 });
 
-function toggleTheme() {
-    const t = document.documentElement.getAttribute('data-theme');
-    document.documentElement.setAttribute('data-theme', t === 'dark' ? 'light' : 'dark');
-}
-
-const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('active');
-    });
-}, { threshold: 0.1 });
-
-document.querySelectorAll('.lazy-reveal').forEach(el => observer.observe(el));
-
-const terminal = document.getElementById('terminal');
-const messages = [
-    "Syncing database clusters...",
-    "Encrypting affiliate links...",
-    "Scaling Facebook pixel events...",
-    "Fetching CHS League standings...",
-    "Optimizing CSS Grid layouts...",
-    "Heartbeat: OK."
-];
-
-setInterval(() => {
-    let div = document.createElement('div');
-    div.innerText = `> [LOG] ${messages[Math.floor(Math.random()*messages.length)]}`;
-    terminal.appendChild(div);
-    if (terminal.childNodes.length > 15) terminal.removeChild(terminal.firstChild);
-}, 3000);
-
-const target = new Date("Aug 1, 2025 00:00:00").getTime();
-setInterval(() => {
-    const now = new Date().getTime();
-    const distance = target - now;
-    const d = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const s = Math.floor((distance % (1000 * 60)) / 1000);
-    document.getElementById("countdown").innerHTML = `${d}d : ${h}h : ${m}m : ${s}s`;
-}, 1000);
-
-// Carousel (Featured Works - unchanged)
-const track = document.getElementById('carouselTrack');
-const cards = track.querySelectorAll('.carousel-card');
-const cardWidth = cards[0].offsetWidth + 30;
-let currentIndex = 0;
-
-function moveCarousel(direction) {
-    currentIndex += direction;
-    if (currentIndex < 0) currentIndex = cards.length / 2 - 1;
-    if (currentIndex >= cards.length / 2) currentIndex = 0;
-    track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
-}
-
-let autoplay = setInterval(() => moveCarousel(1), 4000);
-track.parentElement.addEventListener('mouseenter', () => clearInterval(autoplay));
-track.parentElement.addEventListener('mouseleave', () => {
-    autoplay = setInterval(() => moveCarousel(1), 4000);
+async function testApiKey(){
+const key=apiKeyInput.value.trim();
+if(!key){alert('Please enter an API key');return;}
+const status=document.getElementById('geminiStatus');
+status.textContent='Testing...';
+status.className='gemini-status';
+try{
+const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({contents:[{parts:[{text:'Hi'}]}]})
 });
-</script>
-</body>
-</html>
+if(res.ok){
+status.textContent='Gemini Connected';
+status.className='gemini-status gemini-on';
+geminiAvailable=true;
+}else{
+status.textContent='Invalid Key';
+status.className='gemini-status gemini-off';
+geminiAvailable=false;
+}
+}catch(e){
+status.textContent='Connection Failed';
+status.className='gemini-status gemini-off';
+geminiAvailable=false;
+}
+}
+
+// Auto-test on load if key present
+if(apiKeyInput.value.trim())testApiKey();
+
+// ==================== UPLOAD ====================
+const uploadZone=document.getElementById('uploadZone');
+const imageInput=document.getElementById('imageInput');
+uploadZone.addEventListener('click',()=>imageInput.click());
+uploadZone.addEventListener('dragover',e=>{e.preventDefault();uploadZone.classList.add('dragover')});
+uploadZone.addEventListener('dragleave',()=>uploadZone.classList.remove('dragover'));
+uploadZone.addEventListener('drop',e=>{
+e.preventDefault();uploadZone.classList.remove('dragover');
+if(e.dataTransfer.files[0]?.type.startsWith('image/'))handleImage(e.dataTransfer.files[0]);
+});
+imageInput.addEventListener('change',e=>{if(e.target.files[0])handleImage(e.target.files[0])});
+
+function generateImageId(file){
+return file.name.replace(/[^a-zA-Z0-9]/g,'_')+'_'+file.size+'_'+Date.now();
+}
+
+function handleImage(file){
+// Check if this is a new image vs returning to a saved one
+const newId=generateImageId(file);
+const savedId=localStorage.getItem('template_image_id');
+
+const reader=new FileReader();
+reader.onload=e=>{
+templateImage=new Image();
+templateImage.onload=()=>{
+canvas.width=templateImage.width;
+canvas.height=templateImage.height;
+currentScale=Math.min(560/templateImage.width,1);
+canvas.style.width=(templateImage.width*currentScale)+'px';
+canvas.style.height=(templateImage.height*currentScale)+'px';
+ctx.drawImage(templateImage,0,0);
+originalImageData=ctx.getImageData(0,0,canvas.width,canvas.height);
+drawCanvas();
+document.getElementById('uploadZone').classList.add('hidden');
+document.getElementById('canvasWrap').classList.remove('hidden');
+document.getElementById('autoDetectBtn').disabled=false;
+document.getElementById('fallbackBtn').disabled=false;
+document.getElementById('manualAddBtn').disabled=false;
+document.getElementById('previewCleanBtn').disabled=false;
+document.getElementById('saveTemplateBtn').disabled=false;
+document.getElementById('modeIndicator').textContent='Ready - click Auto-Detect';
+document.getElementById('detectHint').innerHTML='Image loaded. Click 
